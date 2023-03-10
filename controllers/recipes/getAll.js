@@ -7,7 +7,42 @@ const getAll = async (req, res) => {
     limit,
   };
   const result = await Recipe.find(null, '-createdAt -updatedAt', options);
-  res.json(result);
+  const recipes = result.map(recipe => {
+    const {
+      _id,
+      title,
+      category,
+      area,
+      instructions,
+      thumb,
+      time,
+      popularity,
+      youtube,
+      tags,
+      ingridients,
+      likes,
+      favorites,
+    } = recipe;
+    const like = likes.includes(req.user._id);
+    const favorite = favorites.includes(req.user._id);
+    return {
+      _id,
+      title,
+      category,
+      area,
+      instructions,
+      thumb,
+      time,
+      popularity,
+      youtube,
+      tags,
+      ingridients,
+      like,
+      favorite,
+    };
+  });
+
+  res.json(recipes);
 };
 
 module.exports = getAll;

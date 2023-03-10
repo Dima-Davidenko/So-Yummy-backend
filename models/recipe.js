@@ -34,9 +34,15 @@ const recipeSchema = new Schema(
       type: Number,
       default: 0,
     },
-    favorite: {
-      type: Boolean,
-      default: false,
+    favorites: {
+      type: [Schema.Types.ObjectId],
+      ref: 'user',
+      default: [],
+    },
+    likes: {
+      type: [Schema.Types.ObjectId],
+      ref: 'user',
+      default: [],
     },
     youtube: {
       type: String,

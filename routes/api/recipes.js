@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/', authenticate, ctrl.getAll);
 
-router.get('/:id', authenticate, isValidId, ctrl.geById);
+router.get('/:id', authenticate, isValidId, ctrl.getById);
 
 router.post('/', authenticate, ctrl.addRecipe);
 

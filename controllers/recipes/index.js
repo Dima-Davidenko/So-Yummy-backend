@@ -5,6 +5,6 @@ const getRecipeById = require('./getRecipeById');
 
 module.exports = {
   getAll: ctrlWrapper(getAll),
-  geById: ctrlWrapper(getRecipeById),
+  getById: ctrlWrapper(getRecipeById),
   addRecipe: ctrlWrapper(addRecipe),
 };
