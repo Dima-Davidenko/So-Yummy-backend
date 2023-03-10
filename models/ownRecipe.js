@@ -3,21 +3,22 @@ const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 
 const { mongooseHandleError } = require('../helpers');
+const categoriesArray = require('../data/categoriesArray');
 
-const recipeSchema = new Schema(
+const ownRecipeSchema = new Schema(
   {
-    originalId: String,
     title: {
       type: String,
       required: [true, 'Set name for recipe'],
     },
     category: {
       type: String,
+      enum: categoriesArray,
       required: true,
     },
-    area: {
+    about: {
       type: String,
-      required: true,
+      default: '',
     },
     instructions: {
       type: String,
@@ -25,29 +26,17 @@ const recipeSchema = new Schema(
     },
     thumb: {
       type: String,
+      default: '',
     },
     time: {
       type: String,
       default: '',
     },
-    popularity: {
-      type: Number,
-      default: 0,
-    },
     favorite: {
       type: Boolean,
       default: false,
     },
-    youtube: {
-      type: String,
-      default: '',
-    },
-    tags: {
-      type: [String],
-      default: [],
-    },
     ingridients: {
-      _id: false,
       type: [
         {
           title: {
@@ -66,14 +55,30 @@ const recipeSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-recipeSchema.post('save', mongooseHandleError);
+ownRecipeSchema.post('save', mongooseHandleError);
 
-const addSchema = Joi.object({});
+const addSchema = Joi.object({
+  title: Joi.string().min(3).required(),
+  category: Joi.string()
+    .valid(...categoriesArray)
+    .required(),
+  about: Joi.string(),
+  instructions: Joi.string().min(20).required(),
+  thumb: Joi.string(),
+  time: Joi.string(),
+  favorite: Joi.boolean(),
+  ingridients: Joi.array().items(
+    Joi.object({
+      title: Joi.string().required(),
+      measure: Joi.string().required(),
+    })
+  ),
+});
 
 const schemas = {
   addSchema,
 };
 
-const Recipe = model('recipe', recipeSchema);
+const OwnRecipe = model('ownRecipe', ownRecipeSchema);
 
-module.exports = { Recipe, schemas };
+module.exports = { OwnRecipe, schemas };
