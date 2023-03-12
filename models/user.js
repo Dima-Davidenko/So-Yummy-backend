@@ -55,7 +55,7 @@ const registerSchema = Joi.object({
     'string.pattern.base': `wrong format of "email"`,
     'any.required': `"email" is a required field`,
   }),
-  password: Joi.string().min(6).required(),
+  password: Joi.string().min(6).max(100).required(),
 });
 
 const loginSchema = Joi.object({
@@ -65,6 +65,7 @@ const loginSchema = Joi.object({
 
 const emailSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
+  password: Joi.string().min(6).required(),
 });
 
 const userNameSchema = Joi.object({

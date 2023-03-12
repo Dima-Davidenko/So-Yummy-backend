@@ -1,12 +1,17 @@
 const { User } = require('../../models/user');
 const { BASE_FRONTEND_URL } = process.env;
 const { HttpError, sendEmail } = require('../../helpers');
+const bcrypt = require('bcryptjs');
 
 const resendVerificationToken = async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw HttpError(404, 'Email not found');
+    throw HttpError(403, 'Email or password is wrong');
+  }
+  const comparePassword = await bcrypt.compare(password, user.password);
+  if (!comparePassword) {
+    throw HttpError(403, 'Email or password is wrong');
   }
   if (!user.verificationToken) {
     throw HttpError(400, 'Verification has already been passed');

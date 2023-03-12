@@ -1,0 +1,375 @@
+---
+openapi: 3.0.0
+info:
+  title: So Yummy API docs
+  description: The API for the So Yummy project
+  version: 1.0.0
+servers:
+  - url: https://so-yammy-backend.onrender.com/api/users/
+    description: Get the best recipes
+paths:
+  /signup:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register_body'
+        required: true
+      responses:
+        '200':
+          description: User registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              example:
+                name: Emma
+                email: user@example.com
+                avatarURL: https://www.gravatar.com/avatar/d2468a7bc562b16b8c8639e97d5e9b0b
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login_body'
+        required: true
+      responses:
+        '200':
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              example:
+                name: Emma
+                email: user@example.com
+                avatarURL: https://www.gravatar.com/avatar/d2468a7bc562b16b8c8639e97d5e9b0b
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+  /logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout a user
+      responses:
+        '204':
+          description: Successful operation
+        '401':
+          description: Unauthorized (invalid or empty access token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+      security:
+        - bearerAuth: []
+  /refresh:
+    post:
+      tags:
+        - Auth
+      summary: Logout a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/refresh_body'
+        required: true
+      responses:
+        '200':
+          description: Successful refresh response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_2'
+        '403':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_1'
+  /verify/{verificationToken}:
+    get:
+      tags:
+        - Auth
+      summary: Verification User's email
+      parameters:
+        - name: verificationToken
+          in: path
+          description: Verification token
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful email verification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        '404':
+          description: User is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+  /verify/resend-email:
+    post:
+      tags:
+        - Auth
+      summary: Resend verification token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/verify_resendemail_body'
+        required: true
+      responses:
+        '200':
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        '400':
+          description: Verification has already been passed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403_2'
+  /current:
+    get:
+      tags:
+        - Auth
+      summary: Get user's info
+      responses:
+        '200':
+          description: Operation is successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              example:
+                name: Emma
+                email: user@example.com
+                avatarURL: https://www.gravatar.com/avatar/d2468a7bc562b16b8c8639e97d5e9b0b
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    inline_response_403_1:
+      type: object
+      properties:
+        message:
+          type: string
+          example: invalid token
+    register_body:
+      required:
+        - email
+        - name
+        - password
+      type: object
+      properties:
+        name:
+          maxLength: 32
+          minLength: 3
+          type: string
+          example: Emma
+        email:
+          maxLength: 254
+          minLength: 3
+          type: string
+          format: email
+        password:
+          maxLength: 100
+          minLength: 6
+          type: string
+          example: qwerty123
+    inline_response_404:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error's description
+          example: User not found
+    inline_response_403_2:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Verification has already been passed
+          example: Verification has already been passed
+    refresh_body:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGQ4NmViZmIwZTYyMWU0Yzc0MTk0ZCIsImlhdCI6MTY3ODYxNTU2MiwiZXhwIjoxNjc5MjIwMzYyfQ.fKXYzEU6XTlE6ZcgdiFBRzMOkQOVz5M9gWmN3khZi7c
+    login_body:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          maxLength: 254
+          minLength: 3
+          type: string
+          format: email
+        password:
+          maxLength: 100
+          minLength: 6
+          type: string
+          example: qwerty123
+    verify_resendemail_body:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          maxLength: 254
+          minLength: 3
+          type: string
+          format: email
+        password:
+          maxLength: 100
+          minLength: 6
+          type: string
+          example: qwerty123
+    inline_response_200_1:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGQ4NmViZmIwZTYyMWU0Yzc0MTk0ZCIsImlhdCI6MTY3ODYxMzA5NiwiZXhwIjoxNjc4Njk5NDk2fQ.bkjeZ3PNb3-znjv9Neafyj0iTzm-Wv1xJSpUCR-_92E
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGQ4NmViZmIwZTYyMWU0Yzc0MTk0ZCIsImlhdCI6MTY3ODYxMzA5NiwiZXhwIjoxNjc5MjE3ODk2fQ.d9-_Sx6q6dgBnMHujtOa2Yjod0pe93VoAGIIcXougmE
+    inline_response_200:
+      type: object
+      properties:
+        name:
+          maxLength: 254
+          minLength: 3
+          type: string
+          description: User's name
+        email:
+          maxLength: 254
+          minLength: 3
+          type: string
+          description: User's email address
+          format: email
+        avatarURL:
+          type: string
+          description: Link to User's avatar
+    inline_response_200_2:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Verification confirm
+          example: Verification is successful
+    inline_response_200_3:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Operation confirmation
+          example: Verification email is sent
+    inline_response_403:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Email or password is wrong
+          example: Email or password is wrong
+    inline_response_401:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Email is not verified
+          example: Email is not verified
+    inline_response_401_1:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthorized
+    inline_response_400_2:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error's description
+          example: '"refreshToken" is required'
+    inline_response_400:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error's description
+    inline_response_400_1:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error's description
+          example: '"name" is not allowed'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

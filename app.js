@@ -2,10 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 const authRouter = require('./routes/api/auth');
 const recipesRouter = require('./routes/api/recipes');
 const ownRecipesRouter = require('./routes/api/ownRecipes');
+
+const swaggerDocument = YAML.load('./data/swagger.yaml');
 
 const app = express();
 
@@ -15,6 +19,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/users', authRouter);
 app.use('/api/recipes', recipesRouter);

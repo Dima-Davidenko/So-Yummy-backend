@@ -26,7 +26,9 @@
     "multer": "^1.4.5-lts.1",
     "nanoid": "^3.3.4",
     "request": "^2.88.2",
-    "sharp": "^0.31.3"
+    "sharp": "^0.31.3",
+    "swagger-ui-express": "^4.6.2",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "eslint": "7.19.0",
