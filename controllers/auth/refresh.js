@@ -10,6 +10,10 @@ const refresh = async (req, res, next) => {
   let userId = '';
   try {
     const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+    const user = await User.findById(id);
+    if (user.refreshToken !== token) {
+      next(HttpError(400, 'Invalid refresh token'));
+    }
     userId = id;
     tokens = createTokens(id);
   } catch (error) {

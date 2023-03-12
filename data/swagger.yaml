@@ -121,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_400_2'
+                $ref: '#/components/schemas/RefreshBadReqResponse'
         '403':
           description: Invalid refresh token
           content:
@@ -348,13 +348,13 @@ components:
         message:
           type: string
           example: Unauthorized
-    inline_response_400_2:
+    RefreshBadReqResponse:
       type: object
       properties:
         message:
           type: string
           description: Error's description
-          example: '"refreshToken" is required'
+          example: '"refreshToken" is required or invalid'
     inline_response_400:
       type: object
       properties:
