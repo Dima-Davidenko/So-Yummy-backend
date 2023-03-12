@@ -23,7 +23,14 @@ const recipeSchema = new Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      default: '',
+    },
     thumb: {
+      type: String,
+    },
+    preview: {
       type: String,
     },
     time: {
@@ -56,9 +63,10 @@ const recipeSchema = new Schema(
       _id: false,
       type: [
         {
-          title: {
-            type: String,
-            default: '',
+          id: {
+            type: Schema.Types.ObjectId,
+            ref: 'ingridient',
+            required: true,
           },
           measure: {
             type: String,

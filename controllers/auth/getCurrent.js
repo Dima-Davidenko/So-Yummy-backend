@@ -1,8 +1,9 @@
 const getCurrent = async (req, res) => {
-  const { email, name } = req.user;
+  const { email, name, avatarURL } = req.user;
   res.json({
     email,
     name,
+    avatarURL,
   });
 };
 
