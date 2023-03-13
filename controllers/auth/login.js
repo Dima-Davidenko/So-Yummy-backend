@@ -5,7 +5,8 @@ const createTokens = require('../../helpers/createTokens');
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const lowCaseEmail = email.toLowerCase();
+  const user = await User.findOne({ email: lowCaseEmail });
   if (!user) {
     throw HttpError(403, 'Email or password is wrong');
   }

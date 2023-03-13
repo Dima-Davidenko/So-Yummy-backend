@@ -10,9 +10,10 @@ const register = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
   const verificationToken = nanoid();
+  const lowCaseEmail = email.toLowerCase();
   const user = await User.create({
     name,
-    email,
+    email: lowCaseEmail,
     password: hashPassword,
     avatarURL: `https:${avatarURL}`,
     verificationToken,
