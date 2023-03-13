@@ -589,6 +589,8 @@ components:
           $ref: '#/components/schemas/RecipeTitle'
         category:
           $ref: '#/components/schemas/RecipeCategory'
+        description:
+          $ref: '#/components/schemas/RecipeDescription'
         instructions:
           type: string
           description: The cooking instructions for the recipe
@@ -634,6 +636,10 @@ components:
       type: string
       description: The category of the recipe
       example: Beef
+    RecipeDescription:
+      type: string
+      description: Recipe's description
+      example: Recipe's description
     RecipeTime:
       type: string
       description: The time required to prepare the recipe
@@ -663,6 +669,8 @@ components:
           $ref: '#/components/schemas/RecipeTitle'
         category:
           $ref: '#/components/schemas/RecipeCategory'
+        description:
+          $ref: '#/components/schemas/RecipeDescription'
         time:
           $ref: '#/components/schemas/RecipeTime'
         popularity:
