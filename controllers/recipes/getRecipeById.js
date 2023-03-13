@@ -4,10 +4,22 @@ const { Ingridient } = require('../../models/ingridient');
 
 const getRecipeById = async (req, res) => {
   const { id } = req.params;
-  const result = await Recipe.findById(id, null, { lean: true });
+  const result = await Recipe.findById(id, null, { lean: true }).populate({
+    path: 'ingridients.id',
+    model: Ingridient,
+  });
   if (!result) {
-    throw HttpError(404, `Recipe with ${id} not found`);
+    throw HttpError(404, `Recipe with ${id} was not found`);
   }
+  result.ingridients.forEach(ingr => {
+    ingr.title = ingr.id.ttl;
+    ingr.desc = ingr.id.desc;
+    ingr.type = ingr.id.t;
+    ingr.thumb = ingr.id.thb;
+    ingr.quantity = ingr.measure;
+    delete ingr.id;
+    delete ingr.measure;
+  });
   const {
     _id,
     title,
@@ -26,42 +38,21 @@ const getRecipeById = async (req, res) => {
   } = result;
   const like = likes.includes(req.user._id);
   const favorite = favorites.includes(req.user._id);
-  const arrIds = ingridients.map(({ id }) => id);
-  // console.log('arrIds', arrIds);
-  const fullIngrs = await Ingridient.find(
-    {
-      _id: arrIds,
-    },
-    null,
-    { lean: true }
-  );
-  console.log('fullIngrs', fullIngrs);
-  ingridients.forEach(ingridient => {
-    // console.log('ingridient', ingridient);
-    const info = fullIngrs.find(({ _id }) => {
-      return `${_id}` === `${ingridient.id}`;
-    });
-    // console.log('info', info);
-    delete ingridient.id;
-    ingridient.description = info.desc;
-    ingridient.title = info.ttl;
-    ingridient.thumb = info.thb;
-  });
   res.json({
     _id,
     title,
     category,
-    area,
     instructions,
-    thumb,
+    ingridients,
     time,
     popularity,
-    youtube,
-    tags,
-    ingridients,
     favorite,
     like,
-    preview,
+    previewImg: preview,
+    fullImage: thumb,
+    area,
+    tags,
+    youtube,
   });
 };
 

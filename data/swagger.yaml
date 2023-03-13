@@ -5,9 +5,9 @@ info:
   description: The API for the So Yummy project
   version: 1.0.0
 servers:
-  - url: https://so-yammy-backend.onrender.com/api/users/
+  - url: https://so-yammy-backend.onrender.com/api
 paths:
-  /signup:
+  /users/signup:
     post:
       tags:
         - Auth
@@ -41,7 +41,7 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Error's description
-  /login:
+  /users/login:
     post:
       tags:
         - Auth
@@ -83,7 +83,7 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Email or password is wrong
-  /logout:
+  /users/logout:
     post:
       tags:
         - Auth
@@ -101,7 +101,7 @@ paths:
                 message: Unauthorized
       security:
         - bearerAuth: []
-  /refresh:
+  /users/refresh:
     post:
       tags:
         - Auth
@@ -135,7 +135,7 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: invalid token
-  /verify/{verificationToken}:
+  /users/verify/{verificationToken}:
     get:
       tags:
         - Auth
@@ -166,7 +166,7 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: User is not found
-  /verify/resend-email:
+  /users/verify/resend-email:
     post:
       tags:
         - Auth
@@ -202,7 +202,7 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Email or password is wrong
-  /current:
+  /users/current:
     get:
       tags:
         - Auth
@@ -216,7 +216,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
         - bearerAuth: []
-  /user-info:
+  /users/user-info:
     post:
       tags:
         - Auth
@@ -243,7 +243,207 @@ paths:
               example:
                 message: '"name" is required'
         '500':
-          description: Error image processing
+          description: Image processing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes:
+    get:
+      tags:
+        - Recipes
+      summary: Get list of recipes from general recipes database.
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/PageQuery'
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            default: 12
+        - name: popular
+          in: query
+          description: If true - result is sorted by popularity. By default it's sorted by title
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayRecipes'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes/{id}:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipe by ID from general recipes database.
+      parameters:
+        - name: id
+          in: path
+          description: Recipe's ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns the recipe by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeFull'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '404':
+          description: Recipe with ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Recipe with ID was not found / ID is not valid ID
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes/category/list:
+    get:
+      tags:
+        - Recipes
+      summary: Get full list of categories
+      responses:
+        '200':
+          description: Returns the recipe by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesList'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes/category/{category}:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipes lis by Category's name from general recipes database.
+      parameters:
+        - name: category
+          in: path
+          description: Category's name
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/PageQuery'
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            default: 12
+      responses:
+        '200':
+          description: Returns the recipe by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayRecipes'
+        '400':
+          description: Invalid request query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Bad Request
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
           content:
             application/json:
               schema:
@@ -353,6 +553,164 @@ components:
           $ref: '#/components/schemas/UserName'
         avatar:
           $ref: '#/components/schemas/Avatar'
+    Ingredient:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the ingredient.
+          example: Worcestershire Sauce
+        desc:
+          type: string
+          description: A description of the ingredient.
+          example:
+            Worcestershire sauce is a fermented condiment made from a base of vinegar and flavored
+            with anchovies, molasses, tamarind, onion, garlic, and other seasonings. The flavor is
+            savory and sweet with a distinct tang provided by the vinegar
+        type:
+          type: string
+          description: The type of the ingredient.
+          example: Sauce
+        thumb:
+          type: string
+          description: The URL of an image of the ingredient.
+          format: uri
+          example: https://res.cloudinary.com/ddbvbv5sp/image/upload/v1678564914/tg9ml6cwphdrlhkz9u7o.png
+        quantity:
+          type: string
+          description: The quantity of the ingredient.
+          example: 1tbsp
+    RecipeFull:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        title:
+          $ref: '#/components/schemas/RecipeTitle'
+        category:
+          $ref: '#/components/schemas/RecipeCategory'
+        instructions:
+          type: string
+          description: The cooking instructions for the recipe
+          example:
+            Put the onion and oil in a large pan and fry over a fairly high heat for 3-4 mins. Add
+            the garlic and mince and fry until they both brown. Add the mushrooms and herbs, and
+            cook for another couple of mins.\r\n\r\nStir in the tomatoes, beef stock, tomato ketchup
+            or purée, Worcestershire sauce and seasoning.
+        ingridients:
+          type: array
+          description: An array of ingredients needed for the recipe
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        time:
+          $ref: '#/components/schemas/RecipeTime'
+        popularity:
+          $ref: '#/components/schemas/RecipePopularity'
+        favorite:
+          $ref: '#/components/schemas/RecipeFavorite'
+        like:
+          $ref: '#/components/schemas/RecipeLike'
+        previewImg:
+          $ref: '#/components/schemas/RecipePreviewImg'
+        fullImage:
+          type: string
+          description: The URL of the full image for the recipe
+          example: https://www.themealdb.com/images/media/meals/sutysw1468247559.jpg
+        area:
+          type: string
+          description: The area associated with the recipe
+          example: Italian
+        tags:
+          type: array
+          description: An array of tags associated with the recipe
+          items:
+            type: string
+            example: Pasta
+    RecipeID:
+      type: string
+      description: The unique identifier of the recipe
+      example: 640cd5ac2d9fecf12e8897fc
+    RecipeTitle:
+      type: string
+      description: The name of the recipe
+      example: Spaghetti Bolognese
+    RecipeCategory:
+      type: string
+      description: The category of the recipe
+      example: Beef
+    RecipeTime:
+      type: string
+      description: The time required to prepare the recipe
+      example: '40'
+    RecipePopularity:
+      type: integer
+      description: The popularity score of the recipe
+      example: 5
+    RecipeFavorite:
+      type: boolean
+      description: Whether or not the recipe has been marked as a favorite by the user
+      example: true
+    RecipeLike:
+      type: boolean
+      description: Whether or not the recipe has been liked by the user
+      example: false
+    RecipePreviewImg:
+      type: string
+      description: The URL of the preview image for the recipe
+      example: https://res.cloudinary.com/ddbvbv5sp/image/upload/v1678560401/huqdxgwkvbhsfjqtexsm.jpg
+    RecipeShort:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        title:
+          $ref: '#/components/schemas/RecipeTitle'
+        category:
+          $ref: '#/components/schemas/RecipeCategory'
+        time:
+          $ref: '#/components/schemas/RecipeTime'
+        popularity:
+          $ref: '#/components/schemas/RecipePopularity'
+        favorite:
+          $ref: '#/components/schemas/RecipeFavorite'
+        like:
+          $ref: '#/components/schemas/RecipeLike'
+        previewImg:
+          $ref: '#/components/schemas/RecipePreviewImg'
+    ArrayRecipes:
+      type: array
+      items:
+        $ref: '#/components/schemas/RecipeShort'
+    PageQuery:
+      minimum: 1
+      type: integer
+      default: 1
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The ID of the item.
+          example: '1'
+        title:
+          type: string
+          description: The title of the item.
+          example: Beef
+        thumb:
+          type: string
+          description: The URL to the thumbnail image of the item.
+          example: https://www.themealdb.com/images/category/beef.png
+        description:
+          type: string
+          description: A description of the item.
+          example:
+            Beef is the culinary name for meat from cattle, particularly skeletal muscle. Humans
+            have been eating beef since prehistoric times. Beef is a source of high-quality protein
+            and essential nutrients.
+    CategoriesList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Category'
   securitySchemes:
     bearerAuth:
       type: http
