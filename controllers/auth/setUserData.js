@@ -1,33 +1,22 @@
-// const { User } = require('../../models/user');
-// const path = require('path');
-// const jimp = require('jimp');
-// const fs = require('fs/promises');
-// const { HttpError } = require('../../helpers');
+const { User } = require('../../models/user');
 
-// const avatarDir = path.join(__dirname, '../', 'public', 'avatars');
+const { resizeImg, uploadImageToCloudinary } = require('../../helpers');
 
 const setUserData = async (req, res) => {
-  // if (!req.file) {
-  //   throw HttpError(400, 'Avatar is required');
-  // }
-  // const { path: tempUpload, originalname } = req.file;
-  // try {
-  //   const avatarImg = await jimp.read(tempUpload);
-  //   avatarImg.resize(250, 250).write(tempUpload);
-  // } catch (err) {
-  //   throw HttpError(500);
-  // }
-  // const { _id } = req.user;
-  // const fileName = `${_id}_${originalname}`;
-  // const resultUpload = path.join(avatarDir, fileName);
-  // const avatarURL = path.join('avatars', fileName);
-  // await fs.rename(tempUpload, resultUpload);
-  // await User.findByIdAndUpdate(_id, { avatarURL });
-  // res.json({
-  //   avatarURL,
-  // });
-  //
-  // Change code above
+  let user;
+  const name = req.body.name;
+  if (!req.file) {
+    user = await User.findByIdAndUpdate(req.user._id, { name }, { new: true });
+    res.json({ name: user.name, email: user.email, avatarURL: user.avatarURL });
+  } else {
+    const saveAvatarURL = async result => {
+      const avatarURL = result.secure_url;
+      user = await User.findByIdAndUpdate(req.user._id, { name, avatarURL }, { new: true });
+      res.json({ name: user.name, email: user.email, avatarURL: user.avatarURL });
+    };
+    const buffer = await resizeImg({ body: req.file.buffer, width: 150, height: 150 });
+    await uploadImageToCloudinary(buffer, saveAvatarURL);
+  }
 };
 
 module.exports = setUserData;

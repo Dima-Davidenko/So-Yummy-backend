@@ -22,8 +22,8 @@ router.get('/current', authenticate, ctrl.getCurrent);
 router.post(
   '/user-info',
   authenticate,
-  validateBody(schemas.userNameSchema),
   upload.single('avatar'),
+  validateBody(schemas.userNameSchema),
   ctrl.setUserData
 );
 
