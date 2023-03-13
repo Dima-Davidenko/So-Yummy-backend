@@ -276,15 +276,18 @@ paths:
             minimum: 1
             type: integer
             default: 12
-        - name: popular
+        - name: sort
           in: query
-          description: If true - result is sorted by popularity. By default it's sorted by title
+          description:
+            If 'popular' - result is sorted by popularity. By default it's sorted by title
           required: false
           style: form
           explode: true
           schema:
-            type: boolean
-            default: false
+            enum:
+              - title
+              - popular
+            default: title
       responses:
         '200':
           description: Returns the list of recipes
