@@ -563,10 +563,7 @@ components:
         desc:
           type: string
           description: A description of the ingredient.
-          example:
-            Worcestershire sauce is a fermented condiment made from a base of vinegar and flavored
-            with anchovies, molasses, tamarind, onion, garlic, and other seasonings. The flavor is
-            savory and sweet with a distinct tang provided by the vinegar
+          example: A description of the ingredient.
         type:
           type: string
           description: The type of the ingredient.
@@ -592,11 +589,7 @@ components:
         instructions:
           type: string
           description: The cooking instructions for the recipe
-          example:
-            Put the onion and oil in a large pan and fry over a fairly high heat for 3-4 mins. Add
-            the garlic and mince and fry until they both brown. Add the mushrooms and herbs, and
-            cook for another couple of mins.\r\n\r\nStir in the tomatoes, beef stock, tomato ketchup
-            or purée, Worcestershire sauce and seasoning.
+          example: The cooking instructions for the recipe
         ingridients:
           type: array
           description: An array of ingredients needed for the recipe
@@ -703,10 +696,7 @@ components:
         description:
           type: string
           description: A description of the item.
-          example:
-            Beef is the culinary name for meat from cattle, particularly skeletal muscle. Humans
-            have been eating beef since prehistoric times. Beef is a source of high-quality protein
-            and essential nutrients.
+          example: A description of the item.
     CategoriesList:
       type: array
       items:
