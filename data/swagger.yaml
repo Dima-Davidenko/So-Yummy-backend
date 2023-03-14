@@ -363,7 +363,7 @@ paths:
       security:
         - bearerAuth: []
   /recipes/favorite/{id}:
-    get:
+    patch:
       tags:
         - Recipes
       summary: Toggle favorite recipe's status by ID in general recipes database.
@@ -410,7 +410,7 @@ paths:
       security:
         - bearerAuth: []
   /recipes/like/{id}:
-    get:
+    patch:
       tags:
         - Recipes
       summary: Toggle like recipe's status by ID in general recipes database.
