@@ -1,6 +1,7 @@
 const listRecipeResponse = (response, userId) => {
   const recipes = response.map(recipe => {
-    const { _id, title, category, thumb, time, popularity, likes, favorites, description } = recipe;
+    const { _id, title, category, preview, time, popularity, likes, favorites, description } =
+      recipe;
     const like = likes.includes(userId);
     const favorite = favorites.includes(userId);
     return {
@@ -8,7 +9,7 @@ const listRecipeResponse = (response, userId) => {
       title,
       category,
       description,
-      thumb,
+      preview,
       time,
       popularity,
       like,

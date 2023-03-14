@@ -7,10 +7,13 @@ const { authenticate, isValidId } = require('../../middlewares');
 const router = express.Router();
 
 router.get('/', authenticate, ctrl.getAll);
+router.get('/favorite', authenticate, ctrl.getFavorite);
+router.patch('/favorite/:id', authenticate, isValidId, ctrl.updateFavoriteById);
+router.patch('/like/:id', authenticate, isValidId, ctrl.updateLikeById);
 router.get('/category/list', authenticate, ctrl.getAllCategories);
 router.get('/category/:category', authenticate, ctrl.getRecipesByCategory);
 
-router.get('/:id', authenticate, isValidId, ctrl.getById);
+router.patch('/:id', authenticate, isValidId, ctrl.getById);
 
 // router.post('/private', authenticate, createIngrDB);
 

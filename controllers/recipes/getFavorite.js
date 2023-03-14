@@ -1,7 +1,8 @@
 const { listRecipeResponse } = require('../../helpers');
 const { Recipe } = require('../../models/recipe');
 
-const getAll = async (req, res) => {
+const getFavorite = async (req, res) => {
+  const userId = req.user._id;
   const { page = 1, limit = 12, sort = false } = req.query;
   const options = {
     skip: (page - 1) * limit,
@@ -13,10 +14,16 @@ const getAll = async (req, res) => {
   } else {
     sortOpts.title = 1;
   }
-  const result = await Recipe.find(null, '-createdAt -updatedAt', options).sort(sortOpts);
+  console.log(userId);
+  const result = await Recipe.find(
+    { favorites: { $in: [userId] } },
+    '-createdAt -updatedAt',
+    options
+  ).sort(sortOpts);
+  console.log(result);
   const recipes = listRecipeResponse(result, req.user._id);
 
   res.json(recipes);
 };
 
-module.exports = getAll;
+module.exports = getFavorite;

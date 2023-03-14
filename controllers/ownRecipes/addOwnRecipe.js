@@ -10,6 +10,7 @@ const addOwnRecipe = async (req, res) => {
     time,
     favorite,
     ingridients,
+    owner: req.user._id,
   });
   res.json(newRecipe);
 };

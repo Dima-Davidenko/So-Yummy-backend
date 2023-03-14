@@ -81,6 +81,10 @@ const recipeSchema = new Schema(
 );
 
 recipeSchema.post('save', mongooseHandleError);
+recipeSchema.pre('save', function (next) {
+  this.popularity = this.favorites.length + this.likes.length;
+  next();
+});
 
 const addSchema = Joi.object({});
 
