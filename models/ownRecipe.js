@@ -26,7 +26,9 @@ const ownRecipeSchema = new Schema(
     },
     thumb: {
       type: String,
-      default: '',
+    },
+    preview: {
+      type: String,
     },
     time: {
       type: String,

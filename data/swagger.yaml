@@ -313,6 +313,149 @@ paths:
                 message: Error's description
       security:
         - bearerAuth: []
+  /recipes/favorite:
+    get:
+      tags:
+        - Recipes
+      summary: Get list of favorite recipes from general and own recipes databases.
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/PageQuery'
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            default: 12
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteArrayRecipes'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes/favorite/{id}:
+    get:
+      tags:
+        - Recipes
+      summary: Toggle favorite recipe's status by ID in general recipes database.
+      parameters:
+        - name: id
+          in: path
+          description: Recipe's ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns recipe's ID and current favorite status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteGeneralResponse'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '404':
+          description: Recipe with ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Recipe with ID was not found / ID is not valid ID
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes/like/{id}:
+    get:
+      tags:
+        - Recipes
+      summary: Toggle like recipe's status by ID in general recipes database.
+      parameters:
+        - name: id
+          in: path
+          description: Recipe's ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns recipe's ID and current like status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteGeneralResponse'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '404':
+          description: Recipe with ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Recipe with ID was not found / ID is not valid ID
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
   /recipes/{id}:
     get:
       tags:
@@ -624,6 +767,13 @@ components:
           items:
             type: string
             example: Pasta
+    FavoriteGeneralResponse:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        favorite:
+          type: boolean
     RecipeID:
       type: string
       description: The unique identifier of the recipe
@@ -681,10 +831,31 @@ components:
           $ref: '#/components/schemas/RecipeLike'
         previewImg:
           $ref: '#/components/schemas/RecipePreviewImg'
+    FavoriteRecipe:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        title:
+          $ref: '#/components/schemas/RecipeTitle'
+        category:
+          $ref: '#/components/schemas/RecipeCategory'
+        description:
+          $ref: '#/components/schemas/RecipeDescription'
+        time:
+          $ref: '#/components/schemas/RecipeTime'
+        previewImg:
+          $ref: '#/components/schemas/RecipePreviewImg'
+        own:
+          type: boolean
     ArrayRecipes:
       type: array
       items:
         $ref: '#/components/schemas/RecipeShort'
+    FavoriteArrayRecipes:
+      type: array
+      items:
+        $ref: '#/components/schemas/FavoriteRecipe'
     PageQuery:
       minimum: 1
       type: integer

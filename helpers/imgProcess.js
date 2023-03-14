@@ -11,8 +11,6 @@ cloudinary.config({
 const imgProcess = async ({ imgURL, imgID, width, height }) => {
   try {
     const res = await cloudinary.uploader.upload(imgURL, { public_id: imgID });
-    console.log(res);
-    console.log(res.secure_url);
   } catch (error) {
     console.log(error);
   }
