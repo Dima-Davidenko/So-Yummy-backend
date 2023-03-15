@@ -282,7 +282,6 @@ paths:
                 message: Unauthorized
       security:
         - bearerAuth: []
-  /user-info/shopping-list:
     post:
       tags:
         - User
@@ -348,7 +347,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InfoMessage'
               example:
-                message: "\"listItemId\" length must be 24 characters long"
+                message: '"listItemId" length must be 24 characters long'
         '401':
           description: Unauthorized - Invalid or empty access token
           content:
@@ -1057,7 +1056,7 @@ components:
       properties:
         listItemId:
           $ref: '#/components/schemas/ListItemId'
-          
+
   securitySchemes:
     bearerAuth:
       type: http
