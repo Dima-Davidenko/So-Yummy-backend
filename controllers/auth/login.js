@@ -2,8 +2,8 @@ const { User } = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const { HttpError } = require('../../helpers');
 const createTokens = require('../../helpers/createTokens');
-const jwt = require('jsonwebtoken');
-const { ACCESS_SECRET_KEY } = process.env;
+// const jwt = require('jsonwebtoken');
+// const { ACCESS_SECRET_KEY } = process.env;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -19,16 +19,16 @@ const login = async (req, res) => {
   if (!comparePassword) {
     throw HttpError(403, 'Email or password is wrong');
   }
-  if (user.accessToken) {
-    try {
-      jwt.verify(user.accessToken, ACCESS_SECRET_KEY);
-      throw new Error('forbidden');
-    } catch (error) {
-      if (error.message === 'forbidden') {
-        throw HttpError(409, 'Only one active session is permitted');
-      }
-    }
-  }
+  // if (user.accessToken) {
+  //   try {
+  //     jwt.verify(user.accessToken, ACCESS_SECRET_KEY);
+  //     throw new Error('forbidden');
+  //   } catch (error) {
+  //     if (error.message === 'forbidden') {
+  //       throw HttpError(409, 'Only one active session is permitted');
+  //     }
+  //   }
+  // }
 
   const tokens = createTokens(user._id);
   await User.findByIdAndUpdate(user._id, { ...tokens });
