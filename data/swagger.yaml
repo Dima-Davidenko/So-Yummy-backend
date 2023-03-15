@@ -224,10 +224,10 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
         - bearerAuth: []
-  /users/user-info:
+  /user-info/set-user-info:
     post:
       tags:
-        - Auth
+        - User
       summary: Update user's name and avatar
       requestBody:
         content:
@@ -258,6 +258,105 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Error's description
+      security:
+        - bearerAuth: []
+  /user-info/shopping-list:
+    get:
+      tags:
+        - User
+      summary: Get user's shopping list
+      responses:
+        '200':
+          description: Operation is successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingList'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+      security:
+        - bearerAuth: []
+  /user-info/shopping-list:
+    post:
+      tags:
+        - User
+      summary: Add product to user's shopping list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToShoppingListBody'
+        required: true
+      responses:
+        '200':
+          description: Operation is successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddToShoppingListRes'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: '"listItemId" is required'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+      security:
+        - bearerAuth: []
+  /user-info/shopping-list/{listItemId}:
+    delete:
+      tags:
+        - User
+      summary: Remove product from user's shopping list
+      parameters:
+        - name: listItemId
+          in: path
+          description: ID of the item in user's shopping list
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation is successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Product 6411c5c02e7926d2dcf5526d has been deleted
+        '400':
+          description: Invalid request query parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: "\"listItemId\" length must be 24 characters long"
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
       security:
         - bearerAuth: []
   /recipes:
@@ -727,7 +826,7 @@ components:
           description: The URL of an image of the ingredient.
           format: uri
           example: https://res.cloudinary.com/ddbvbv5sp/image/upload/v1678564914/tg9ml6cwphdrlhkz9u7o.png
-        quantity:
+        measure:
           type: string
           description: The quantity of the ingredient.
           example: 1tbsp
@@ -793,10 +892,61 @@ components:
           type: boolean
         popularity:
           $ref: '#/components/schemas/RecipePopularity'
+    AddToShoppingListBody:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ProductId'
+        measure:
+          type: string
+          description: Quantity of product
+          example: '400g'
     RecipeID:
       type: string
       description: The unique identifier of the recipe
       example: 640cd5ac2d9fecf12e8897fc
+    ShoppingList:
+      type: object
+      properties:
+        shoppingList:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShoppingListItem'
+    ShoppingListItem:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/schemas/ProductId'
+        listItemId:
+          $ref: '#/components/schemas/ListItemId'
+        title:
+          type: string
+          description: Product's title
+          example: Chicken
+        desc:
+          type: string
+          description: Product's description
+          example: The chicken is a type of domesticated fowl
+        type:
+          type: string
+          description: Product's type
+          example: Meat
+        thumb:
+          type: string
+          description: The URL of the image for the product
+          example: https://www.themealdb.com/images/media/meals/sutysw1468247559.jpg
+        measure:
+          type: string
+          description: Quantity of product
+          example: '400g'
+    ProductId:
+      type: string
+      description: The unique identifier of the product
+      example: 640cd5ac2d9fecf12e8897fc
+    ListItemId:
+      type: string
+      description: The unique identifier of the item in shopping list
+      example: 640cd5ac2d9fecf12e8897fa
     RecipeTitle:
       type: string
       description: The name of the recipe
@@ -902,6 +1052,12 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Category'
+    AddToShoppingListRes:
+      type: object
+      properties:
+        listItemId:
+          $ref: '#/components/schemas/ListItemId'
+          
   securitySchemes:
     bearerAuth:
       type: http

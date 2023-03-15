@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { validateBody, authenticate, upload } = require('../../middlewares/');
+const { validateBody, authenticate } = require('../../middlewares/');
 
 const { schemas } = require('../../models/user');
 
@@ -19,12 +19,5 @@ router.post('/login', validateBody(schemas.loginSchema), ctrl.login);
 router.post('/logout', authenticate, ctrl.logout);
 router.post('/refresh', validateBody(schemas.refreshSchema), ctrl.refresh);
 router.get('/current', authenticate, ctrl.getCurrent);
-router.post(
-  '/user-info',
-  authenticate,
-  upload.single('avatar'),
-  validateBody(schemas.userNameSchema),
-  ctrl.setUserData
-);
 
 module.exports = router;

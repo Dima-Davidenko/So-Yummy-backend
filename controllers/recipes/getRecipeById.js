@@ -17,9 +17,7 @@ const getRecipeById = async (req, res) => {
     ingr.desc = ingr.id.desc;
     ingr.type = ingr.id.t;
     ingr.thumb = ingr.id.thb;
-    ingr.quantity = ingr.measure;
     delete ingr.id;
-    delete ingr.measure;
   });
   const {
     _id,

@@ -46,6 +46,22 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
+    shoppingList: {
+      type: [
+        {
+          productId: {
+            type: Schema.Types.ObjectId,
+            ref: 'ingridient',
+            required: true,
+          },
+          measure: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
+      default: [],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -80,12 +96,23 @@ const refreshSchema = Joi.object({
   refreshToken: Joi.string().required(),
 });
 
+const product = Joi.object({
+  productId: Joi.string().length(24).required(),
+  measure: Joi.string(),
+});
+
+const listItemId = Joi.object({
+  listItemId: Joi.string().length(24).required(),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
   userNameSchema,
   refreshSchema,
+  product,
+  listItemId,
 };
 
 const User = model('user', userSchema);

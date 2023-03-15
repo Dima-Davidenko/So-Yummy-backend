@@ -5,6 +5,7 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const authRouter = require('./routes/api/auth');
+const userRouter = require('./routes/api/user');
 const recipesRouter = require('./routes/api/recipes');
 const ownRecipesRouter = require('./routes/api/ownRecipes');
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/users', authRouter);
+app.use('/api/user-info', userRouter);
 app.use('/api/recipes', recipesRouter);
 app.use('/api/own-recipes', ownRecipesRouter);
 
