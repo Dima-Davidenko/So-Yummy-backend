@@ -49,7 +49,7 @@ const userSchema = new Schema(
 userSchema.post('save', mongooseHandleError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().min(3).max(32).required(),
+  name: Joi.string().min(1).max(16).required(),
   email: Joi.string().pattern(emailRegex).required().messages({
     'string.base': `"email" should be a type of 'string'`,
     'string.pattern.base': `wrong format of "email"`,
@@ -69,7 +69,7 @@ const emailSchema = Joi.object({
 });
 
 const userNameSchema = Joi.object({
-  name: Joi.string().min(3).max(32).required(),
+  name: Joi.string().min(1).max(16).required(),
 });
 
 const refreshSchema = Joi.object({
