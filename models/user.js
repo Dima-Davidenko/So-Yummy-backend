@@ -42,6 +42,10 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
+    userDeviceInfo: {
+      type: String,
+      default: '',
+    },
   },
   { versionKey: false, timestamps: true }
 );
