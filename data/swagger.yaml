@@ -83,6 +83,14 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Email or password is wrong
+        '409':
+          description: Conflict - Only one active session is permitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Only one active session is permitted
   /users/logout:
     post:
       tags:
