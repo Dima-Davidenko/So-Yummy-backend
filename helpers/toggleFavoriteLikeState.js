@@ -17,7 +17,7 @@ const toggleFavoriteLikeState = async ({ type, req, Model }) => {
     likeOrFavorite = false;
   }
   const result = await recipe.save();
-  return { _id: result._id, likeOrFavorite };
+  return { _id: result._id, likeOrFavorite, popularity: result.popularity };
 };
 
 module.exports = toggleFavoriteLikeState;

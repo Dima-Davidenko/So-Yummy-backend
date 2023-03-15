@@ -429,7 +429,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FavoriteGeneralResponse'
+                $ref: '#/components/schemas/LikeGeneralResponse'
         '401':
           description: Unauthorized - Invalid or empty access token
           content:
@@ -774,6 +774,17 @@ components:
           $ref: '#/components/schemas/RecipeID'
         favorite:
           type: boolean
+        popularity:
+          $ref: '#/components/schemas/RecipePopularity'
+    LikeGeneralResponse:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        like:
+          type: boolean
+        popularity:
+          $ref: '#/components/schemas/RecipePopularity'
     RecipeID:
       type: string
       description: The unique identifier of the recipe
