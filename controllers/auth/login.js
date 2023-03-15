@@ -22,7 +22,7 @@ const login = async (req, res) => {
   }
   const userDeviceInfo = JSON.stringify(UAParser(req.headers['user-agent']));
 
-  if (userDeviceInfo !== user.userDeviceInfo) {
+  if (user.userDeviceInfo && userDeviceInfo !== user.userDeviceInfo) {
     if (user.accessToken) {
       try {
         jwt.verify(user.accessToken, ACCESS_SECRET_KEY);
