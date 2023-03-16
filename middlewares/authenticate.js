@@ -17,22 +17,20 @@ const authenticate = async (req, res, next) => {
     const superuser = await User.findOne({ email: 'superuser@mail.com' });
     req.user = superuser;
     next();
-  } else {
-    // <-------------------------------------
-    try {
-      const { id } = jwt.verify(accessToken, ACCESS_SECRET_KEY);
-      const user = await User.findById(id);
-      if (!user || !user.accessToken || user.accessToken !== accessToken) {
-        next(HttpError(401));
-      }
-      req.user = user;
-      next();
-    } catch (error) {
-      next(HttpError(401, error.message));
-    }
-    // ------------------------------------------>
+    return;
   }
-  // <-----------------------------------
+  // <-------------------------------------
+  try {
+    const { id } = jwt.verify(accessToken, ACCESS_SECRET_KEY);
+    const user = await User.findById(id);
+    if (!user || !user.accessToken || user.accessToken !== accessToken) {
+      next(HttpError(401));
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    next(HttpError(401, error.message));
+  }
 };
 
 module.exports = authenticate;

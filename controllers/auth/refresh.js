@@ -12,6 +12,7 @@ const refresh = async (req, res, next) => {
       accessToken: 'superuser',
       refreshToken: 'superuser',
     });
+    return;
   }
   // <---------------------------------------
   let tokens = {};
