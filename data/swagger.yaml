@@ -393,7 +393,7 @@ paths:
             enum:
               - title
               - popular
-            default: title
+            default: popular
       responses:
         '200':
           description: Returns the list of recipes
@@ -443,13 +443,25 @@ paths:
             minimum: 1
             type: integer
             default: 12
+        - name: sort
+          in: query
+          description:
+            If 'popular' - result is sorted by popularity. By default it's sorted by title
+          required: false
+          style: form
+          explode: true
+          schema:
+            enum:
+              - title
+              - popular
+            default: popular
       responses:
         '200':
           description: Returns the list of recipes
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FavoriteArrayRecipes'
+                $ref: '#/components/schemas/ArrayRecipes'
         '401':
           description: Unauthorized - Invalid or empty access token
           content:
@@ -562,7 +574,7 @@ paths:
                 message: Error's description
       security:
         - bearerAuth: []
-  /recipes/{id}:
+  /recipes/id/{id}:
     get:
       tags:
         - Recipes
@@ -652,7 +664,7 @@ paths:
           style: simple
           explode: false
           schema:
-            type: string
+            $ref: '#/components/schemas/CategoriesSchema'
         - name: page
           in: query
           description: Page number
@@ -671,6 +683,18 @@ paths:
             minimum: 1
             type: integer
             default: 12
+        - name: sort
+          in: query
+          description:
+            If 'popular' - result is sorted by popularity. By default it's sorted by title
+          required: false
+          style: form
+          explode: true
+          schema:
+            enum:
+              - title
+              - popular
+            default: popular
       responses:
         '200':
           description: Returns the recipe by ID
@@ -704,8 +728,211 @@ paths:
                 message: Error's description
       security:
         - bearerAuth: []
+  /recipes/title/{query}:
+    get:
+      tags:
+        - Recipes
+      summary: Get list of recipes from general recipes database that include query string.
+      parameters:
+        - name: query
+          in: path
+          description: Search query that recipe title should contain
+          required: true
+          style: simple
+          explode: false
+          schema:
+            $ref: '#/components/schemas/CategoriesSchema'
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/PageQuery'
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            default: 12
+        - name: sort
+          in: query
+          description:
+            If 'popular' - result is sorted by popularity. By default it's sorted by popular
+          required: false
+          style: form
+          explode: true
+          schema:
+            enum:
+              - title
+              - popular
+            default: popular
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayRecipes'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /recipes/ingredient/{query}:
+    get:
+      tags:
+        - Recipes
+      summary: Get list of recipes from general recipes database that include query string.
+      parameters:
+        - name: query
+          in: path
+          description: Search query that recipe title should contain
+          required: true
+          style: simple
+          explode: false
+          schema:
+            $ref: '#/components/schemas/CategoriesSchema'
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/PageQuery'
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            default: 12
+        - name: sort
+          in: query
+          description:
+            If 'popular' - result is sorted by popularity. By default it's sorted by popular
+          required: false
+          style: form
+          explode: true
+          schema:
+            enum:
+              - title
+              - popular
+            default: popular
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayRecipes'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /own-recipes/favorite/{id}:
+    patch:
+      tags:
+        - Own Recipes
+      summary: Toggle favorite recipe's status by ID in own recipes database.
+      parameters:
+        - name: id
+          in: path
+          description: Recipe's ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns recipe's ID and current favorite status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteOwnRecipesResponse'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '403':
+          description: Forbidden - An attempt to change someone else's recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Forbidden
+        '404':
+          description: Recipe with ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Recipe with ID was not found / ID is not valid ID
+      security:
+        - bearerAuth: []
 components:
   schemas:
+    CategoriesSchema:
+      type: string
+      enum:
+        - Beef
+        - Chicken
+        - Dessert
+        - Lamb
+        - Miscellaneous
+        - Pasta
+        - Pork
+        - Seafood
+        - Side
+        - Starter
+        - Vegan
+        - Vegetarian
+        - Breakfast
+        - Goat
+        - Another
     RegisterCredentials:
       required:
         - email
@@ -882,6 +1109,13 @@ components:
           type: boolean
         popularity:
           $ref: '#/components/schemas/RecipePopularity'
+    FavoriteOwnRecipesResponse:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        favorite:
+          type: boolean
     LikeGeneralResponse:
       type: object
       properties:
@@ -999,7 +1233,7 @@ components:
           $ref: '#/components/schemas/RecipeLike'
         previewImg:
           $ref: '#/components/schemas/RecipePreviewImg'
-    FavoriteRecipe:
+    ResponseRecipe:
       type: object
       properties:
         _id:
@@ -1010,20 +1244,51 @@ components:
           $ref: '#/components/schemas/RecipeCategory'
         description:
           $ref: '#/components/schemas/RecipeDescription'
+        preview:
+          $ref: '#/components/schemas/RecipePreviewImg'
         time:
           $ref: '#/components/schemas/RecipeTime'
-        previewImg:
-          $ref: '#/components/schemas/RecipePreviewImg'
-        own:
+        popularity:
+          type: integer
+        like:
+          type: boolean
+        favorite:
           type: boolean
     ArrayRecipes:
-      type: array
-      items:
-        $ref: '#/components/schemas/RecipeShort'
-    FavoriteArrayRecipes:
-      type: array
-      items:
-        $ref: '#/components/schemas/FavoriteRecipe'
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseRecipe'
+        total:
+          $ref: '#/components/schemas/TotalAvailable'
+        page:
+          $ref: '#/components/schemas/Page'
+        limit:
+          $ref: '#/components/schemas/Limit'
+        sort:
+          $ref: '#/components/schemas/SortOpts'
+    TotalAvailable:
+      type: number
+      description: The number of available items
+      example: 45
+    Page:
+      type: number
+      description: Current page in the collection
+      example: 2
+    Limit:
+      type: number
+      description: The limit of items in the collection
+      example: 6
+    SortOpts:
+      type: string
+      enum:
+        - title
+        - popular
+      description: For "title" sort alphabetically, for "popular" most popular first
+      example: title
+
     PageQuery:
       minimum: 1
       type: integer

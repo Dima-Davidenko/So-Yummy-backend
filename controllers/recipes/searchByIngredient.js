@@ -1,13 +1,18 @@
 const { Recipe } = require('../../models/recipe');
 const {
   getSkipLimitPage,
+  getRegexForSearchByTitleAndIngredient,
+  getFacetObject,
   getSortTypeByTitleOrPopularity,
   processPagedRecipesResult,
-  getFacetObject,
 } = require('../../helpers');
 
-const getFavorite = async (req, res) => {
+const searchByIngredient = async (req, res) => {
+  const { query } = req.params;
+  const regex = getRegexForSearchByTitleAndIngredient(query);
+
   const userId = req.user._id;
+
   const { page: sPage = 1, limit: sLimit = 12, sort: sSort } = req.query;
 
   const { skip, limit, page } = getSkipLimitPage({ page: sPage, limit: sLimit });
@@ -15,7 +20,19 @@ const getFavorite = async (req, res) => {
   const { sortOpts, sort } = getSortTypeByTitleOrPopularity(sSort);
 
   const result = await Recipe.aggregate([
-    { $match: { favorites: { $in: [userId] } } },
+    {
+      $lookup: {
+        from: 'ingridients',
+        localField: 'ingridients.id',
+        foreignField: '_id',
+        as: 'ingredients',
+      },
+    },
+    {
+      $match: {
+        'ingredients.ttl': { $regex: regex },
+      },
+    },
     {
       ...getFacetObject({ sortOpts, skip, limit }),
     },
@@ -26,4 +43,4 @@ const getFavorite = async (req, res) => {
   res.json({ ...response, page, limit, sort });
 };
 
-module.exports = getFavorite;
+module.exports = searchByIngredient;
