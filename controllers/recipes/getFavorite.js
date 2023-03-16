@@ -9,7 +9,7 @@ const getFavorite = async (req, res) => {
     Recipe.find({ favorites: { $in: [userId] } }, '-createdAt -updatedAt').sort({
       popularity: 1,
     }),
-    OwnRecipe.find({ favorites: true }),
+    OwnRecipe.find({ favorite: true }),
   ];
 
   const [favoriteGeneralRecepes, favoriteOwnRecepes] = await Promise.all(promiseArr);
@@ -41,7 +41,7 @@ const getFavorite = async (req, res) => {
 
   const paginatedRecipes = recipesCommon.slice(skip, skip + limit);
 
-  res.json(paginatedRecipes);
+  res.json({ favoriteRecipes: paginatedRecipes, total: recipesCommon.length, page, limit });
 };
 
 module.exports = getFavorite;
