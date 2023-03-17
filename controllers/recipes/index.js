@@ -8,6 +8,7 @@ const updateFavoriteById = require('./updateFavoriteById');
 const updateLikeById = require('./updateLikeById');
 const searchByTitle = require('./searchByTitle');
 const searchByIngredient = require('./searchByIngredient');
+const getAllIngredients = require('./getAllIngredients');
 
 module.exports = {
   getAll: ctrlWrapper(getAll),
@@ -19,4 +20,5 @@ module.exports = {
   updateLikeById: ctrlWrapper(updateLikeById),
   searchByTitle: ctrlWrapper(searchByTitle),
   searchByIngredient: ctrlWrapper(searchByIngredient),
+  getAllIngredients: ctrlWrapper(getAllIngredients),
 };

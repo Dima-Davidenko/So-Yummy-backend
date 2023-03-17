@@ -16,6 +16,7 @@ router.get('/category/:category', authenticate, ctrl.getRecipesByCategory);
 router.get('/id/:id', authenticate, isValidId, ctrl.getById);
 router.get('/title/:query', authenticate, ctrl.searchByTitle);
 router.get('/ingredient/:query', authenticate, ctrl.searchByIngredient);
+router.get('/ingredients', authenticate, ctrl.getAllIngredients);
 
 // router.post('/private', authenticate, goThroughAllRecipes);
 

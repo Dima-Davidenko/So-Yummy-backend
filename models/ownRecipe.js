@@ -65,11 +65,10 @@ const addSchema = Joi.object({
   category: Joi.string()
     .valid(...categoriesArray)
     .required(),
-  about: Joi.string(),
+  description: Joi.string(),
   instructions: Joi.string().min(20).required(),
   thumb: Joi.string(),
   time: Joi.string(),
-  favorite: Joi.boolean(),
   ingredients: Joi.array().items(
     Joi.object({
       title: Joi.string().required(),
