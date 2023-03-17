@@ -15,8 +15,8 @@ const getRecipeById = async (req, res) => {
   result.ingredients.forEach(ingr => {
     ingr.title = ingr.id.ttl;
     ingr.desc = ingr.id.desc;
-    ingr.type = ingr.id.t;
     ingr.thumb = ingr.id.thb;
+    ingr._id = ingr.id._id;
     delete ingr.id;
   });
   const {
@@ -36,8 +36,12 @@ const getRecipeById = async (req, res) => {
     likes,
     preview,
   } = result;
-  const like = likes.includes(req.user._id);
-  const favorite = favorites.includes(req.user._id);
+  const like = likes.some(item => {
+    return String(item._id) === String(req.user._id);
+  });
+  const favorite = favorites.some(item => {
+    return String(item._id) === String(req.user._id);
+  });
   res.json({
     _id,
     title,
