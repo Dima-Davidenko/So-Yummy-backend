@@ -1,18 +1,18 @@
 const { HttpError } = require('../../helpers');
 const { Recipe } = require('../../models/recipe');
-const { Ingridient } = require('../../models/ingridient');
+const { Ingredient } = require('../../models/ingredient');
 
 const getRecipeById = async (req, res) => {
   const { id } = req.params;
   const result = await Recipe.findById(id, null, { lean: true }).populate({
-    path: 'ingridients.id',
-    model: Ingridient,
+    path: 'ingredients.id',
+    model: Ingredient,
   });
   if (!result) {
     throw HttpError(404, `Recipe with ${id} was not found`);
   }
-  result.ingridients.forEach(ingr => {
-    ingr._id = ingr.id._id;
+  console.log(result);
+  result.ingredients.forEach(ingr => {
     ingr.title = ingr.id.ttl;
     ingr.desc = ingr.id.desc;
     ingr.type = ingr.id.t;
@@ -31,7 +31,7 @@ const getRecipeById = async (req, res) => {
     popularity,
     youtube,
     tags,
-    ingridients,
+    ingredients,
     favorites,
     likes,
     preview,
@@ -44,7 +44,7 @@ const getRecipeById = async (req, res) => {
     category,
     description,
     instructions,
-    ingridients,
+    ingredients,
     time,
     popularity,
     favorite,

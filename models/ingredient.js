@@ -14,6 +14,6 @@ const ingrSchema = new Schema(
 
 ingrSchema.post('save', mongooseHandleError);
 
-const Ingridient = model('ingridient', ingrSchema);
+const Ingredient = model('ingredient', ingrSchema);
 
-module.exports = { Ingridient };
+module.exports = { Ingredient };

@@ -22,8 +22,8 @@ const searchByIngredient = async (req, res) => {
   const result = await Recipe.aggregate([
     {
       $lookup: {
-        from: 'ingridients',
-        localField: 'ingridients.id',
+        from: 'ingredients',
+        localField: 'ingredients.id',
         foreignField: '_id',
         as: 'ingredients',
       },

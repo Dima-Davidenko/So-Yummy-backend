@@ -9,7 +9,6 @@ const getFacetObject = ({ sortOpts, skip, limit }) => {
           $project: {
             createdAt: 0,
             updatedAt: 0,
-            ingridients: 0,
             ingredients: 0,
             area: 0,
             tags: 0,

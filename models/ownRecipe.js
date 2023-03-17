@@ -16,7 +16,7 @@ const ownRecipeSchema = new Schema(
       enum: categoriesArray,
       required: true,
     },
-    about: {
+    description: {
       type: String,
       default: '',
     },
@@ -34,11 +34,7 @@ const ownRecipeSchema = new Schema(
       type: String,
       default: '',
     },
-    favorite: {
-      type: Boolean,
-      default: false,
-    },
-    ingridients: {
+    ingredients: {
       type: [
         {
           title: {
@@ -74,7 +70,7 @@ const addSchema = Joi.object({
   thumb: Joi.string(),
   time: Joi.string(),
   favorite: Joi.boolean(),
-  ingridients: Joi.array().items(
+  ingredients: Joi.array().items(
     Joi.object({
       title: Joi.string().required(),
       measure: Joi.string().required(),

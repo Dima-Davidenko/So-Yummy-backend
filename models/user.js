@@ -4,7 +4,10 @@ const Joi = require('joi');
 
 const { mongooseHandleError } = require('../helpers');
 
-const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const { MAX_SHOPPINGLIST_LENGTH } = require('../data/constants');
+
+const emailRegex =
+  /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
 const userSchema = new Schema(
   {
@@ -46,12 +49,16 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
+    ownRecipesNumber: {
+      type: Number,
+      default: 0,
+    },
     shoppingList: {
       type: [
         {
           productId: {
             type: Schema.Types.ObjectId,
-            ref: 'ingridient',
+            ref: 'ingredient',
             required: true,
           },
           measure: {
@@ -61,6 +68,13 @@ const userSchema = new Schema(
         },
       ],
       default: [],
+      validate: {
+        validator: v => {
+          return v.length <= MAX_SHOPPINGLIST_LENGTH;
+        },
+        message: props =>
+          `${props.path} exceeds the maximum allowed length of ${MAX_SHOPPINGLIST_LENGTH}`,
+      },
     },
   },
   { versionKey: false, timestamps: true }
