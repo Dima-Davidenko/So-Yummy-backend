@@ -15,7 +15,7 @@ router.post(
   validateBody(schemas.product),
   ctrl.addProductToShoppingList
 );
-router.delete(
+router.patch(
   '/shopping-list',
   authenticate,
   validateBody(schemas.product),

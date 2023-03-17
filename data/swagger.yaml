@@ -298,7 +298,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddToShoppingListRes'
+                $ref: '#/components/schemas/ShoppingList'
         '400':
           description: Invalid request body
           content:
@@ -306,7 +306,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InfoMessage'
               example:
-                message: '"listItemId" is required'
+                message: Wrong product ID | Wrong measure
         '401':
           description: Unauthorized - Invalid or empty access token
           content:
@@ -315,39 +315,49 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Unauthorized
+        '403':
+          description: Forbidden - You have reached the maximum length of the list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: You have reached the maximum length (100) of your shopping list
+        '404':
+          description: Not found - No such ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: No such ingredient
       security:
         - bearerAuth: []
-  /user-info/shopping-list/{listItemId}:
-    delete:
+    patch:
       tags:
         - User
       summary: Remove product from user's shopping list
-      parameters:
-        - name: listItemId
-          in: path
-          description: ID of the item in user's shopping list
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToShoppingListBody'
+        required: true
       responses:
         '200':
           description: Operation is successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InfoMessage'
-              example:
-                message: Product 6411c5c02e7926d2dcf5526d has been deleted
+                $ref: '#/components/schemas/ShoppingList'
         '400':
-          description: Invalid request query parameter
+          description: Invalid request body
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/InfoMessage'
               example:
-                message: '"listItemId" length must be 24 characters long'
+                message: Wrong product ID | Wrong measure
         '401':
           description: Unauthorized - Invalid or empty access token
           content:
@@ -356,6 +366,14 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Unauthorized
+        '404':
+          description: Not found - No such ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: No such ingredient
       security:
         - bearerAuth: []
   /recipes:
@@ -1071,7 +1089,7 @@ components:
           type: string
           description: The cooking instructions for the recipe
           example: The cooking instructions for the recipe
-        ingredients:
+        ingridients:
           type: array
           description: An array of ingredients needed for the recipe
           items:
@@ -1150,28 +1168,20 @@ components:
       properties:
         productId:
           $ref: '#/components/schemas/ProductId'
-        listItemId:
-          $ref: '#/components/schemas/ListItemId'
         title:
           type: string
           description: Product's title
-          example: Chicken
-        desc:
-          type: string
-          description: Product's description
-          example: The chicken is a type of domesticated fowl
-        type:
-          type: string
-          description: Product's type
           example: Meat
         thumb:
           type: string
           description: The URL of the image for the product
           example: https://www.themealdb.com/images/media/meals/sutysw1468247559.jpg
         measure:
-          type: string
+          type: array
+          items:
+            type: string
+            example: '400g'
           description: Quantity of product
-          example: '400g'
     ProductId:
       type: string
       description: The unique identifier of the product
