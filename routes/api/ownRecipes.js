@@ -11,6 +11,6 @@ router.post(
   validateBody(schemas.addSchema),
   ctrl.addOwnRecipe
 );
-router.delete('/id/:id', authenticate, isValidId, ctrl.deleteOwnFavoriteById);
+router.delete('/id/:id', authenticate, isValidId, ctrl.deleteOwnById);
 
 module.exports = router;

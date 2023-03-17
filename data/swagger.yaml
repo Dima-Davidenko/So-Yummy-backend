@@ -884,11 +884,60 @@ paths:
                 message: Error's description
       security:
         - bearerAuth: []
-  /own-recipes/favorite/{id}:
-    patch:
+  /own-recipes:
+    get:
       tags:
         - Own Recipes
-      summary: Toggle favorite recipe's status by ID in own recipes database.
+      summary: Get list of recipes from own recipes database.
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          style: form
+          explode: true
+          schema:
+            $ref: '#/components/schemas/PageQuery'
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 1
+            type: integer
+            default: 12
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOwnRecipes'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
+  /own-recipes/id/{id}:
+    delete:
+      tags:
+        - Own Recipes
+      summary: Delete recipe by ID from own recipes database.
       parameters:
         - name: id
           in: path
@@ -904,7 +953,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FavoriteOwnRecipesResponse'
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Recipe 64147b63f2a131ac9cfb592e has been successfully deleted
+        '400':
+          description: Invalid request query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Bad Request
         '401':
           description: Unauthorized - Invalid or empty access token
           content:
@@ -914,7 +973,7 @@ paths:
               example:
                 message: Unauthorized
         '403':
-          description: Forbidden - An attempt to change someone else's recipe
+          description: Forbidden - An attempt to delete someone else's recipe
           content:
             application/json:
               schema:
@@ -1264,6 +1323,21 @@ components:
           type: boolean
         favorite:
           type: boolean
+    ResponseOwnRecipe:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/RecipeID'
+        title:
+          $ref: '#/components/schemas/RecipeTitle'
+        category:
+          $ref: '#/components/schemas/RecipeCategory'
+        description:
+          $ref: '#/components/schemas/RecipeDescription'
+        preview:
+          $ref: '#/components/schemas/RecipePreviewImg'
+        time:
+          $ref: '#/components/schemas/RecipeTime'
     ArrayRecipes:
       type: object
       properties:
@@ -1271,6 +1345,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseRecipe'
+        total:
+          $ref: '#/components/schemas/TotalAvailable'
+        page:
+          $ref: '#/components/schemas/Page'
+        limit:
+          $ref: '#/components/schemas/Limit'
+        sort:
+          $ref: '#/components/schemas/SortOpts'
+    ArrayOwnRecipes:
+      type: object
+      properties:
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseOwnRecipe'
         total:
           $ref: '#/components/schemas/TotalAvailable'
         page:
