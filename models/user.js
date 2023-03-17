@@ -4,7 +4,7 @@ const Joi = require('joi');
 
 const { mongooseHandleError } = require('../helpers');
 
-const { MAX_SHOPPINGLIST_LENGTH } = require('../data/constants');
+const { MAX_SHOPPINGLIST_LENGTH, MAX_SHOPPINGLIST_MEASURE_LENGTH } = require('../data/constants');
 
 const emailRegex =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -54,6 +54,7 @@ const userSchema = new Schema(
       default: 0,
     },
     shoppingList: {
+      _id: false,
       type: [
         {
           productId: {
@@ -62,8 +63,15 @@ const userSchema = new Schema(
             required: true,
           },
           measure: {
-            type: String,
-            required: true,
+            type: [String],
+            default: [],
+            validate: {
+              validator: v => {
+                return v.length <= MAX_SHOPPINGLIST_MEASURE_LENGTH;
+              },
+              message: props =>
+                `${props.path} exceeds the maximum allowed length of measure field (${MAX_SHOPPINGLIST_MEASURE_LENGTH}) `,
+            },
           },
         },
       ],
@@ -112,7 +120,7 @@ const refreshSchema = Joi.object({
 
 const product = Joi.object({
   productId: Joi.string().length(24).required(),
-  measure: Joi.string(),
+  measure: Joi.string().max(30).required(),
 });
 
 const listItemId = Joi.object({

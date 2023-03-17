@@ -15,7 +15,12 @@ router.post(
   validateBody(schemas.product),
   ctrl.addProductToShoppingList
 );
-router.delete('/shopping-list/:listItemId', authenticate, ctrl.removeProductTFromShoppingList);
+router.delete(
+  '/shopping-list',
+  authenticate,
+  validateBody(schemas.product),
+  ctrl.removeProductTFromShoppingList
+);
 router.post(
   '/set-user-info',
   authenticate,
