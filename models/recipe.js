@@ -60,7 +60,7 @@ const recipeSchema = new Schema(
       default: [],
     },
     ingredients: {
-      _id: true,
+      _id: false,
       type: [
         {
           id: {
