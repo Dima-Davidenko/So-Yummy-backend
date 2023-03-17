@@ -1071,7 +1071,7 @@ components:
           type: string
           description: The cooking instructions for the recipe
           example: The cooking instructions for the recipe
-        ingridients:
+        ingredients:
           type: array
           description: An array of ingredients needed for the recipe
           items:

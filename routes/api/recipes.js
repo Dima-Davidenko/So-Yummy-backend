@@ -3,6 +3,7 @@ const express = require('express');
 const ctrl = require('../../controllers/recipes');
 
 const { authenticate, isValidId } = require('../../middlewares');
+const goThroughAllRecipes = require('../../temp/api/goThroughAllRecipes');
 
 const router = express.Router();
 
@@ -16,6 +17,6 @@ router.get('/id/:id', authenticate, isValidId, ctrl.getById);
 router.get('/title/:query', authenticate, ctrl.searchByTitle);
 router.get('/ingredient/:query', authenticate, ctrl.searchByIngredient);
 
-// router.post('/private', authenticate, addRecipes);
+router.post('/private', authenticate, goThroughAllRecipes);
 
 module.exports = router;
