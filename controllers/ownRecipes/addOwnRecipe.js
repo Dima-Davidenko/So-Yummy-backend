@@ -28,7 +28,10 @@ const addOwnRecipe = async (req, res) => {
       if (newRecipe) {
         req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
         req.user.save();
-        res.json({ message: `Recipe ${newRecipe._id} has been created` });
+        res.json({
+          id: newRecipe._id,
+          message: `Recipe ${newRecipe._id} has been created`,
+        });
       } else {
         res.json({ message: 'An error occured' });
       }
@@ -49,7 +52,10 @@ const addOwnRecipe = async (req, res) => {
     if (newRecipe) {
       req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
       req.user.save();
-      res.json({ message: `Recipe ${newRecipe._id} has been created` });
+      res.json({
+        id: newRecipe._id,
+        message: `Recipe ${newRecipe._id} has been created`,
+      });
     } else {
       res.json({ message: 'An error occured' });
     }
