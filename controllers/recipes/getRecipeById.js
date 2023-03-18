@@ -11,7 +11,6 @@ const getRecipeById = async (req, res) => {
   if (!result) {
     throw HttpError(404, `Recipe with ${id} was not found`);
   }
-  console.log(result);
   result.ingredients.forEach(ingr => {
     ingr.title = ingr.id.ttl;
     ingr.desc = ingr.id.desc;
