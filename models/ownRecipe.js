@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, isValidObjectId } = require('mongoose');
 
 const Joi = require('joi');
 
@@ -35,11 +35,13 @@ const ownRecipeSchema = new Schema(
       default: '',
     },
     ingredients: {
+      _id: false,
       type: [
         {
-          title: {
-            type: String,
-            default: '',
+          id: {
+            type: Schema.Types.ObjectId,
+            ref: 'ingredient',
+            required: true,
           },
           measure: {
             type: String,
@@ -61,18 +63,23 @@ const ownRecipeSchema = new Schema(
 ownRecipeSchema.post('save', mongooseHandleError);
 
 const addSchema = Joi.object({
-  title: Joi.string().min(3).required(),
+  title: Joi.string().min(2).max(200).required(),
   category: Joi.string()
     .valid(...categoriesArray)
     .required(),
-  description: Joi.string(),
-  instructions: Joi.string().min(20).required(),
-  thumb: Joi.string(),
-  time: Joi.string(),
+  description: Joi.string().min(2).max(600).required(),
+  instructions: Joi.string().min(2).max(2000).required(),
+  time: Joi.string().required(),
   ingredients: Joi.array().items(
     Joi.object({
-      title: Joi.string().required(),
-      measure: Joi.string().required(),
+      id: Joi.string().custom((value, helpers) => {
+        if (isValidObjectId(value)) {
+          return value;
+        } else {
+          return helpers.message('Invalid ID');
+        }
+      }),
+      measure: Joi.string().min(2).max(200).required(),
     })
   ),
 });

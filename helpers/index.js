@@ -5,6 +5,7 @@ const sendEmail = require('./sendEmail');
 const listRecipeResponse = require('./listRecipeResponse');
 const resizeImg = require('./resizeImg');
 const uploadImageToCloudinary = require('./uploadImageToCloudinary');
+const deleteImageFromCloudinary = require('./deleteImageFromCloudinary');
 const getSkipLimitPage = require('./getSkipLimitPage');
 const getRegexForSearchByTitleAndIngredient = require('./getRegexForSearchByTitleAndIngredient');
 const getSortTypeByTitleOrPopularity = require('./getSortTypeByTitleOrPopularity');
@@ -19,6 +20,7 @@ module.exports = {
   listRecipeResponse,
   resizeImg,
   uploadImageToCloudinary,
+  deleteImageFromCloudinary,
   getSkipLimitPage,
   getRegexForSearchByTitleAndIngredient,
   getSortTypeByTitleOrPopularity,

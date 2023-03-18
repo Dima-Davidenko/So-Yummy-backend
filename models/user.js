@@ -49,9 +49,9 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
-    ownRecipesNumber: {
-      type: Number,
-      default: 0,
+    timeSinceLastDBSecureRequest: {
+      type: Date,
+      default: Date.now(),
     },
     shoppingList: {
       _id: false,

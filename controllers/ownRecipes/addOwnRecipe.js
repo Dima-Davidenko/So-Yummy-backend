@@ -3,7 +3,8 @@ const { MAX_RECIPES_NUMBER } = require('../../data/constants');
 const { HttpError, resizeImg, uploadImageToCloudinary } = require('../../helpers');
 
 const addOwnRecipe = async (req, res) => {
-  if (req.user.ownRecipesNumber >= MAX_RECIPES_NUMBER) {
+  const ownRecipesNumber = await OwnRecipe.countDocuments({ owner: { $in: [req.user._id] } });
+  if (ownRecipesNumber >= MAX_RECIPES_NUMBER) {
     throw HttpError(
       403,
       `You have reached the maximum number of your recipes (${MAX_RECIPES_NUMBER}).`
@@ -24,10 +25,16 @@ const addOwnRecipe = async (req, res) => {
         preview,
         owner: req.user._id,
       });
-      res.json(newRecipe);
+      if (newRecipe) {
+        req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
+        req.user.save();
+        res.json({ message: `Recipe ${newRecipe._id} has been created` });
+      } else {
+        res.json({ message: 'An error occured' });
+      }
     };
-    const buffer = await resizeImg({ body: req.file.buffer, width: 350, height: 350 });
-    await uploadImageToCloudinary(buffer, saveAvatarURL);
+    const buffer = await resizeImg({ body: req.file, width: 350, height: 350 });
+    await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
   } else {
     const newRecipe = await OwnRecipe.create({
       title,
@@ -39,7 +46,13 @@ const addOwnRecipe = async (req, res) => {
       ingredients,
       owner: req.user._id,
     });
-    res.json(newRecipe);
+    if (newRecipe) {
+      req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
+      req.user.save();
+      res.json({ message: `Recipe ${newRecipe._id} has been created` });
+    } else {
+      res.json({ message: 'An error occured' });
+    }
   }
 };
 

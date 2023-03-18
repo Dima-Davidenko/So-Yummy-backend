@@ -13,14 +13,15 @@ const login = async (req, res) => {
   if (email === 'superuser@mail.com') {
     const superuser = await User.findOne({ email });
     res.json({
-      accessToken: superuser.accessToken,
-      refreshToken: superuser.refreshToken,
+      accessToken: 'superuser',
+      refreshToken: 'superuser',
       user: {
         name: superuser.name,
         email: superuser.email,
         avatarURL: superuser.avatarURL,
       },
     });
+    return;
   }
   // ------------------------------------------------
   const user = await User.findOne({ email: lowCaseEmail });

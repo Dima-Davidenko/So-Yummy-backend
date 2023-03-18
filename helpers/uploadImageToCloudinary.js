@@ -1,3 +1,5 @@
+const { nanoid } = require('nanoid');
+
 const { CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
 
 const cloudinary = require('cloudinary').v2;
@@ -8,8 +10,8 @@ cloudinary.config({
   api_secret: CLOUDINARY_SECRET,
 });
 
-const uploadImageToCloudinary = async (buffer, saveAvatarURL) => {
-  const options = { resource_type: 'image' };
+const uploadImageToCloudinary = async (buffer, saveAvatarURL, userId) => {
+  const options = { resource_type: 'image', public_id: `${userId}/${nanoid()}` };
   const result = await cloudinary.uploader
     .upload_stream(options, async (error, result) => {
       if (error) {

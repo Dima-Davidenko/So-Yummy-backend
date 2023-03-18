@@ -1,6 +1,6 @@
 const { User } = require('../../models/user');
 
-const { resizeImg, uploadImageToCloudinary } = require('../../helpers');
+const { resizeImg, uploadImageToCloudinary, deleteImageFromCloudinary } = require('../../helpers');
 
 const setUserData = async (req, res) => {
   let user;
@@ -14,8 +14,11 @@ const setUserData = async (req, res) => {
       user = await User.findByIdAndUpdate(req.user._id, { name, avatarURL }, { new: true });
       res.json({ name: user.name, email: user.email, avatarURL: user.avatarURL });
     };
-    const buffer = await resizeImg({ body: req.file.buffer, width: 150, height: 150 });
-    await uploadImageToCloudinary(buffer, saveAvatarURL);
+    const buffer = await resizeImg({ body: req.file, width: 150, height: 150 });
+    if (req.user.avatarURL) {
+      await deleteImageFromCloudinary(req.user.avatarURL);
+    }
+    await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
   }
 };
 
