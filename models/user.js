@@ -35,7 +35,7 @@ const userSchema = new Schema(
     },
     verificationToken: {
       type: String,
-      required: [true, 'Verify token is required'],
+      default: '',
     },
     accessToken: {
       type: String,
@@ -60,7 +60,6 @@ const userSchema = new Schema(
           productId: {
             type: Schema.Types.ObjectId,
             ref: 'ingredient',
-            required: true,
           },
           measure: {
             type: [String],
