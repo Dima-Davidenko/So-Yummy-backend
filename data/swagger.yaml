@@ -933,6 +933,41 @@ paths:
                 message: Error's description
       security:
         - bearerAuth: []
+    post:
+      tags:
+        - Own Recipes
+      summary: Add a recipe to own recipes database.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOwnRecipeBody'
+        required: true
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOwnRecipes'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
   /own-recipes/id/{id}:
     delete:
       tags:
@@ -949,13 +984,67 @@ paths:
             type: string
       responses:
         '200':
-          description: Returns recipe's ID and current favorite status
+          description: Delete own recipe by ID
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Recipe 64147b63f2a131ac9cfb592e has been successfully deleted
+        '400':
+          description: Invalid request query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Bad Request
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '403':
+          description: Forbidden - An attempt to delete someone else's recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Forbidden
+        '404':
+          description: Recipe with ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Recipe with ID was not found / ID is not valid ID
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - Own Recipes
+      summary: Get recipe by ID from own recipes database.
+      parameters:
+        - name: id
+          in: path
+          description: Recipe's ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns recipe by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOwnRecipes'
         '400':
           description: Invalid request query
           content:
@@ -1148,7 +1237,7 @@ components:
           type: string
           description: The cooking instructions for the recipe
           example: The cooking instructions for the recipe
-        ingredients:
+        ingridients:
           type: array
           description: An array of ingredients needed for the recipe
           items:
@@ -1177,6 +1266,36 @@ components:
           items:
             type: string
             example: Pasta
+    AddOwnRecipeBody:
+      type: object
+      properties:
+        title:
+          $ref: '#/components/schemas/RecipeTitle'
+        category:
+          $ref: '#/components/schemas/RecipeCategory'
+        description:
+          $ref: '#/components/schemas/RecipeDescription'
+        instructions:
+          type: string
+          description: The cooking instructions for the recipe
+          example: The cooking instructions for the recipe
+        ingredients:
+          type: array
+          description: An array of ingredients needed for the recipe
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/RecipeID'
+              measure:
+                type: string
+                example: 400g
+        time:
+          $ref: '#/components/schemas/RecipeTime'
+        fullImage:
+          type: string
+          description: File object of cooked meal
+          example: File Object
     FavoriteGeneralResponse:
       type: object
       properties:
