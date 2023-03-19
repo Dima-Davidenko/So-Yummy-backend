@@ -37,7 +37,33 @@ const addOwnRecipe = async (req, res) => {
       }
     };
     const buffer = await resizeImg({ body: req.file, width: 350, height: 350 });
-    await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
+    try {
+      const result = await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
+      const preview = result.secure_url;
+      const newRecipe = await OwnRecipe.create({
+        title,
+        category,
+        about,
+        instructions,
+        time,
+        favorite,
+        ingredients,
+        preview,
+        owner: req.user._id,
+      });
+      if (newRecipe) {
+        req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
+        req.user.save();
+        res.json({
+          id: newRecipe._id,
+          message: `Recipe ${newRecipe._id} has been created`,
+        });
+      } else {
+        res.json({ message: 'An error occured' });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   } else {
     const newRecipe = await OwnRecipe.create({
       title,

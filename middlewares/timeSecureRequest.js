@@ -8,7 +8,11 @@ const timeSecureRequest = (delay = 1000) => {
       next(HttpError(403, `Too many requests`));
     } else {
       req.user.timeSinceLastDBSecureRequest = Date.now();
-      await req.user.save();
+      try {
+        await req.user.save();
+      } catch (error) {
+        console.log(error.message);
+      }
     }
     next();
   };

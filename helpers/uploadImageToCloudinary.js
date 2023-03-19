@@ -12,15 +12,24 @@ cloudinary.config({
 
 const uploadImageToCloudinary = async (buffer, saveAvatarURL, userId) => {
   const options = { resource_type: 'image', public_id: `${userId}/${nanoid()}` };
-  const result = await cloudinary.uploader
-    .upload_stream(options, async (error, result) => {
-      if (error) {
-        throw error;
-      }
-      await saveAvatarURL(result);
-    })
-    .end(buffer);
-  return result;
+  try {
+    const result = await cloudinary.uploader
+      .upload_stream(options, async (error, result) => {
+        if (error) {
+          console.log(error.message);
+        } else {
+          try {
+            await saveAvatarURL(result);
+          } catch (error) {
+            console.log(error.message);
+          }
+        }
+      })
+      .end(buffer);
+    return result;
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 module.exports = uploadImageToCloudinary;

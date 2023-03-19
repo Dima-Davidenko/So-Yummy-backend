@@ -16,9 +16,17 @@ const setUserData = async (req, res) => {
     };
     const buffer = await resizeImg({ body: req.file, width: 150, height: 150 });
     if (req.user.avatarURL) {
-      await deleteImageFromCloudinary(req.user.avatarURL);
+      try {
+        await deleteImageFromCloudinary(req.user.avatarURL);
+      } catch (error) {
+        console.log(error.message);
+      }
     }
-    await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
+    try {
+      await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 };
 

@@ -11,7 +11,12 @@ const deleteOwnById = async (req, res) => {
     throw HttpError(403);
   }
   if (recipe.preview) {
-    deleteImageFromCloudinary(recipe.preview);
+    try {
+      const deleteResult = await deleteImageFromCloudinary(recipe.preview);
+      console.log(deleteResult);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   await OwnRecipe.findByIdAndDelete(id);
   req.user.ownRecipesNumber = req.user.ownRecipesNumber - 1;

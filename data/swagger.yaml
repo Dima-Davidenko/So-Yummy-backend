@@ -91,6 +91,168 @@ paths:
                 $ref: '#/components/schemas/InfoMessage'
               example:
                 message: Only one active session is permitted
+  /users/reset/send-reset-link:
+    post:
+      tags:
+        - Auth
+      summary: Send link on email with reset token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetLinkBody'
+        required: true
+      responses:
+        '200':
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email with link to reset password has been sent
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: '"email" is required'
+        '401':
+          description: Unauthorized - Email is not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email is not verified
+        '403':
+          description: Forbidden - Email is wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email is wrong
+        '409':
+          description: Conflict - some income data are invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Conflict
+        '425':
+          description: Too early - acceptable time between requests is 60 seconds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: 45
+  /users/reset/reset-password:
+    post:
+      tags:
+        - Auth
+      summary: Reset user's password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordBody'
+        required: true
+      responses:
+        '200':
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetPasswordToken'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: '"email" is required'
+        '401':
+          description: Unauthorized - Email is not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email is not verified
+        '403':
+          description: Forbidden - Email is wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email is wrong
+        '409':
+          description: Conflict - some income data are invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Conflict
+  /users/reset/set-new-password:
+    post:
+      tags:
+        - Auth
+      summary: Set new user's password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetNewPasswordBody'
+        required: true
+      responses:
+        '200':
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Success
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: '"email" is required'
+        '401':
+          description: Unauthorized - Email is not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email is not verified
+        '403':
+          description: Forbidden - Email is wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Email is wrong
+        '409':
+          description: Conflict - some income data are invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Conflict
   /users/logout:
     post:
       tags:
@@ -1188,6 +1350,32 @@ components:
         accessToken:
           $ref: '#/components/schemas/Token'
         refreshToken:
+          $ref: '#/components/schemas/Token'
+    ResetLinkBody:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+    ResetPasswordBody:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        resetEmailToken:
+          $ref: '#/components/schemas/Token'
+    SetNewPasswordBody:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        password:
+          $ref: '#/components/schemas/Password'
+        resetPasswordToken:
+          $ref: '#/components/schemas/Token'
+    ResetPasswordToken:
+      type: object
+      properties:
+        resetPasswordToken:
           $ref: '#/components/schemas/Token'
     UpdateUserInfoBody:
       required:

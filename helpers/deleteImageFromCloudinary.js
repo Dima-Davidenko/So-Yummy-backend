@@ -14,13 +14,16 @@ const deleteImageFromCloudinary = async url => {
   const imgId = fileName.split('.')[0];
   const userId = pathArr.at(-2);
   const fullImgId = `${userId}/${imgId}`;
-  const result = await cloudinary.uploader.destroy(fullImgId, async (error, result) => {
-    if (error) {
-      throw error;
-    }
-    // await saveAvatarURL(result);
-  });
-  return result;
+  try {
+    const result = await cloudinary.uploader.destroy(fullImgId, async error => {
+      if (error) {
+        console.log(error.message);
+      }
+    });
+    return result;
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 module.exports = deleteImageFromCloudinary;

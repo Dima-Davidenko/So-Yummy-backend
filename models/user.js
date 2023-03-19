@@ -27,7 +27,7 @@ const userSchema = new Schema(
     },
     avatarURL: {
       type: String,
-      required: true,
+      default: '',
     },
     verify: {
       type: Boolean,
@@ -48,6 +48,14 @@ const userSchema = new Schema(
     userDeviceInfo: {
       type: String,
       default: '',
+    },
+    passwordResetStage: {
+      type: String,
+      default: '',
+    },
+    passwordResetTime: {
+      type: Date,
+      default: Date.now(),
     },
     timeSinceLastDBSecureRequest: {
       type: Date,
@@ -104,9 +112,19 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const resetSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required(),
+  resetEmailToken: Joi.string(),
+});
+
+const setNewPasswordSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required(),
+  password: Joi.string().min(6),
+  resetPasswordToken: Joi.string(),
+});
+
 const emailSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
-  password: Joi.string().min(6).required(),
 });
 
 const userNameSchema = Joi.object({
@@ -134,6 +152,8 @@ const schemas = {
   refreshSchema,
   product,
   listItemId,
+  resetSchema,
+  setNewPasswordSchema,
 };
 
 const User = model('user', userSchema);

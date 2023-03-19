@@ -20,4 +20,16 @@ router.post('/logout', authenticate, ctrl.logout);
 router.post('/refresh', validateBody(schemas.refreshSchema), ctrl.refresh);
 router.get('/current', authenticate, ctrl.getCurrent);
 
+router.post(
+  '/reset/send-reset-link',
+  validateBody(schemas.emailSchema),
+  ctrl.sendPasswordResetEmail
+);
+router.post('/reset/reset-password', validateBody(schemas.resetSchema), ctrl.resetPassword);
+router.post(
+  '/reset/set-new-password',
+  validateBody(schemas.setNewPasswordSchema),
+  ctrl.setNewPassword
+);
+
 module.exports = router;

@@ -12,14 +12,14 @@ router.get('/shopping-list', authenticate, ctrl.getShoppingList);
 router.post(
   '/shopping-list',
   authenticate,
-  timeSecureRequest(),
+  timeSecureRequest(200),
   validateBody(schemas.product),
   ctrl.addProductToShoppingList
 );
 router.patch(
   '/shopping-list',
   authenticate,
-  timeSecureRequest(),
+  timeSecureRequest(200),
   validateBody(schemas.product),
   ctrl.removeProductTFromShoppingList
 );
