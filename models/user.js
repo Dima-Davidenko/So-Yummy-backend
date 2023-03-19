@@ -4,7 +4,11 @@ const Joi = require('joi');
 
 const { mongooseHandleError } = require('../helpers');
 
-const { MAX_SHOPPINGLIST_LENGTH, MAX_SHOPPINGLIST_MEASURE_LENGTH } = require('../data/constants');
+const {
+  MAX_SHOPPINGLIST_LENGTH,
+  MAX_SHOPPINGLIST_MEASURE_LENGTH,
+  MAX_SUBSCRIBELIST_LENGTH,
+} = require('../data/constants');
 
 const emailRegex =
   /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
@@ -60,6 +64,18 @@ const userSchema = new Schema(
     timeSinceLastDBSecureRequest: {
       type: Date,
       default: Date.now(),
+    },
+    subscribeList: {
+      _id: false,
+      type: [String],
+      default: [],
+      validate: {
+        validator: v => {
+          return v.length <= MAX_SUBSCRIBELIST_LENGTH;
+        },
+        message: props =>
+          `${props.path} exceeds the maximum allowed length (${MAX_SUBSCRIBELIST_LENGTH}) `,
+      },
     },
     shoppingList: {
       _id: false,

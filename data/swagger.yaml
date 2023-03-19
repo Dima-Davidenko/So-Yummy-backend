@@ -538,6 +538,42 @@ paths:
                 message: No such ingredient
       security:
         - bearerAuth: []
+  /user-info/subscribe-list:
+    post:
+      tags:
+        - User
+      summary: Update user's name and avatar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddSubscribeListBody'
+        required: true
+      responses:
+        '200':
+          description: Operation is successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscribeListResponse'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: '"email" is required'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+      security:
+        - bearerAuth: []
   /recipes:
     get:
       tags:
@@ -1363,6 +1399,18 @@ components:
           $ref: '#/components/schemas/Email'
         resetEmailToken:
           $ref: '#/components/schemas/Token'
+    AddSubscribeListBody:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+    SubscribeListResponse:
+      type: object
+      properties:
+        subscribeList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Email'
     SetNewPasswordBody:
       type: object
       properties:

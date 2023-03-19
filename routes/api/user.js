@@ -10,6 +10,13 @@ const router = express.Router();
 
 router.get('/shopping-list', authenticate, ctrl.getShoppingList);
 router.post(
+  '/subscribe-list',
+  authenticate,
+  timeSecureRequest(200),
+  validateBody(schemas.emailSchema),
+  ctrl.addEmailToSubscribeList
+);
+router.post(
   '/shopping-list',
   authenticate,
   timeSecureRequest(200),
