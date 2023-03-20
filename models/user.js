@@ -49,9 +49,25 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
-    userDeviceInfo: {
-      type: String,
-      default: '',
+
+    userSessions: {
+      _id: false,
+      type: [
+        {
+          userDeviceInfo: {
+            type: String,
+            default: '',
+          },
+          accessToken: {
+            type: String,
+            default: '',
+          },
+          refreshToken: {
+            type: String,
+            default: '',
+          },
+        },
+      ],
     },
     passwordResetStage: {
       type: String,

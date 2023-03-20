@@ -5,6 +5,7 @@ const { validateBody, authenticate } = require('../../middlewares/');
 const { schemas } = require('../../models/user');
 
 const ctrl = require('../../controllers/auth');
+const authenticateWithSessions = require('../../middlewares/authenticateWithSessions');
 
 const router = express.Router();
 
@@ -15,10 +16,10 @@ router.post(
   validateBody(schemas.emailSchema),
   ctrl.resendVerificationToken
 );
-router.post('/login', validateBody(schemas.loginSchema), ctrl.login);
-router.post('/logout', authenticate, ctrl.logout);
-router.post('/refresh', validateBody(schemas.refreshSchema), ctrl.refresh);
-router.get('/current', authenticate, ctrl.getCurrent);
+router.post('/login', validateBody(schemas.loginSchema), ctrl.loginWithSessions);
+router.post('/logout', authenticateWithSessions, ctrl.logoutWithSessions);
+router.post('/refresh', validateBody(schemas.refreshSchema), ctrl.refreshWithSessions);
+router.get('/current', authenticateWithSessions, ctrl.getCurrent);
 
 router.post(
   '/reset/send-reset-link',

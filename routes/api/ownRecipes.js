@@ -1,7 +1,7 @@
 const express = require('express');
 const ctrl = require('../../controllers/ownRecipes');
 const {
-  authenticate,
+  authenticateWithSessions,
   validateBody,
   isValidId,
   upload,
@@ -9,16 +9,22 @@ const {
 } = require('../../middlewares');
 const { schemas } = require('../../models/ownRecipe');
 const router = express.Router();
-router.get('/', authenticate, ctrl.getOwnRecipes);
+router.get('/', authenticateWithSessions, ctrl.getOwnRecipes);
 router.post(
   '/',
-  authenticate,
+  authenticateWithSessions,
   timeSecureRequest(),
   upload.single('fullImage'),
   validateBody(schemas.addSchema),
   ctrl.addOwnRecipe
 );
-router.get('/id/:id', authenticate, isValidId, ctrl.getOwnRecipeById);
-router.delete('/id/:id', authenticate, timeSecureRequest(), isValidId, ctrl.deleteOwnById);
+router.get('/id/:id', authenticateWithSessions, isValidId, ctrl.getOwnRecipeById);
+router.delete(
+  '/id/:id',
+  authenticateWithSessions,
+  timeSecureRequest(),
+  isValidId,
+  ctrl.deleteOwnById
+);
 
 module.exports = router;
