@@ -30,6 +30,9 @@ const ownRecipeSchema = new Schema(
     preview: {
       type: String,
     },
+    fullImg: {
+      type: String,
+    },
     time: {
       type: String,
       default: '',

@@ -1,7 +1,17 @@
 const listRecipeResponse = (response, userId) => {
   const recipes = response.map(recipe => {
-    const { _id, title, category, preview, time, popularity, likes, favorites, description } =
-      recipe;
+    const {
+      _id,
+      title,
+      category,
+      preview,
+      time,
+      popularity,
+      likes,
+      favorites,
+      description,
+      fullImg,
+    } = recipe;
     const favorite = favorites?.some(id => String(id) === String(userId));
     const like = likes?.some(id => String(id) === String(userId));
     return {
@@ -10,6 +20,7 @@ const listRecipeResponse = (response, userId) => {
       category,
       description,
       preview,
+      fullImg,
       time,
       popularity,
       like,

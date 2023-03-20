@@ -12,8 +12,14 @@ const deleteOwnById = async (req, res) => {
   }
   if (recipe.preview) {
     try {
-      const deleteResult = await deleteImageFromCloudinary(recipe.preview);
-      console.log(deleteResult);
+      await deleteImageFromCloudinary(recipe.preview);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  if (recipe.fullImg) {
+    try {
+      await deleteImageFromCloudinary(recipe.fullImg);
     } catch (error) {
       console.log(error.message);
     }

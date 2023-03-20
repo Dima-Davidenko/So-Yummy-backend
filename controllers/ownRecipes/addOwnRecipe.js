@@ -10,20 +10,29 @@ const addOwnRecipe = async (req, res) => {
       `You have reached the maximum number of your recipes (${MAX_RECIPES_NUMBER}).`
     );
   }
-  const { title, category, about, instructions, time, favorite, ingredients } = req.body;
+  const { title, category, about, instructions, time, favorite, ingredients, description } =
+    req.body;
   if (req.file) {
-    const saveAvatarURL = async result => {
+    let newRecipe;
+    const createRecipeAndSavePreviewUrl = async result => {
       const preview = result.secure_url;
-      const newRecipe = await OwnRecipe.create({
+      newRecipe = await OwnRecipe.create({
         title,
         category,
         about,
         instructions,
+        description,
         time,
         favorite,
         ingredients,
         preview,
         owner: req.user._id,
+      });
+    };
+    const addFullImageToRecipe = async result => {
+      const fullImg = result.secure_url;
+      newRecipe = await OwnRecipe.findByIdAndUpdate(newRecipe._id, {
+        fullImg,
       });
       if (newRecipe) {
         req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
@@ -36,9 +45,11 @@ const addOwnRecipe = async (req, res) => {
         res.json({ message: 'An error occured' });
       }
     };
-    const buffer = await resizeImg({ body: req.file, width: 350, height: 350 });
     try {
-      uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
+      const preview = await resizeImg({ body: req.file, width: 350, height: 350 });
+      await uploadImageToCloudinary(preview, createRecipeAndSavePreviewUrl, req.user._id);
+      const fullImg = await resizeImg({ body: req.file, width: 750, height: 750 });
+      await uploadImageToCloudinary(fullImg, addFullImageToRecipe, req.user._id);
     } catch (error) {
       console.log(error.message);
     }
