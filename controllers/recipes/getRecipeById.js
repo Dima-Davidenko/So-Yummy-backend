@@ -25,7 +25,7 @@ const getRecipeById = async (req, res) => {
     description,
     area,
     instructions,
-    thumb,
+    fullImg: thumb,
     time,
     popularity,
     youtube,

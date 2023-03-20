@@ -18,7 +18,7 @@ const getOwnRecipeById = async (req, res) => {
     ingr._id = ingr.id._id;
     delete ingr.id;
   });
-  const { _id, title, category, description, instructions, thumb, time, ingredients, preview } =
+  const { _id, title, category, description, instructions, fullImg, time, ingredients, preview } =
     result;
   res.json({
     _id,
@@ -28,8 +28,8 @@ const getOwnRecipeById = async (req, res) => {
     instructions,
     ingredients,
     time,
-    previewImg: preview,
-    fullImage: thumb,
+    preview,
+    fullImg,
   });
 };
 
