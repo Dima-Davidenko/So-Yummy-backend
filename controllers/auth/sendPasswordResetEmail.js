@@ -44,7 +44,7 @@ const sendPasswordResetEmail = async (req, res) => {
   const verificationEmail = {
     to: email,
     subject: 'Password reset',
-    html: `<a target="_blank" href="${BASE_FRONTEND_URL}/password-rest-token/${user.verificationToken}">Click to reset your password</a>`,
+    html: `<a target="_blank" href="${BASE_FRONTEND_URL}/password-reset-token/${user.verificationToken}">Click to reset your password</a>`,
   };
   await sendEmail(verificationEmail);
 

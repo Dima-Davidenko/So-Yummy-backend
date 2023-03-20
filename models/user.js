@@ -41,15 +41,6 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
-    accessToken: {
-      type: String,
-      default: '',
-    },
-    refreshToken: {
-      type: String,
-      default: '',
-    },
-
     userSessions: {
       _id: false,
       type: [
