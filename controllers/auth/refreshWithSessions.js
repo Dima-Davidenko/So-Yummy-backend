@@ -47,7 +47,7 @@ const refreshWithSessions = async (req, res, next) => {
   }
 
   const tokens = createTokens(id);
-  userSessions[index] = { ...tokens };
+  userSessions[index] = { ...userSessions[index], ...tokens };
   user.userSessions = userSessions;
   await user.save();
 
