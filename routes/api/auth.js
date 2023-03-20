@@ -13,7 +13,7 @@ router.post('/signup', validateBody(schemas.registerSchema), ctrl.register);
 router.get('/verify/:verificationToken', ctrl.verify);
 router.post(
   '/verify/resend-email',
-  validateBody(schemas.emailSchema),
+  validateBody(schemas.loginSchema),
   ctrl.resendVerificationToken
 );
 router.post('/login', validateBody(schemas.loginSchema), ctrl.loginWithSessions);
