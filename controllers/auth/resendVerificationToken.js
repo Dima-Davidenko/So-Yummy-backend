@@ -17,7 +17,6 @@ const resendVerificationToken = async (req, res) => {
     throw HttpError(400, 'Verification has already been passed');
   }
 
-  await User.findOneAndUpdate(user._id, { verify: true, verificationToken: '' });
   const verificationEmail = {
     to: email,
     subject: 'Email verification',

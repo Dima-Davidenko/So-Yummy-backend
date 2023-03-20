@@ -3,6 +3,7 @@ const addProductToShoppingList = require('./addProductToShoppingList');
 const removeProductTFromShoppingList = require('./removeProductTFromShoppingList');
 const setUserData = require('./setUserData');
 const addEmailToSubscribeList = require('./addEmailToSubscribeList');
+const removeEmailFromSubscriptionList = require('./removeEmailFromSubscriptionList');
 const { ctrlWrapper } = require('../../helpers');
 
 module.exports = {
@@ -11,4 +12,5 @@ module.exports = {
   removeProductTFromShoppingList: ctrlWrapper(removeProductTFromShoppingList),
   setUserData: ctrlWrapper(setUserData),
   addEmailToSubscribeList: ctrlWrapper(addEmailToSubscribeList),
+  removeEmailFromSubscriptionList: ctrlWrapper(removeEmailFromSubscriptionList),
 };
