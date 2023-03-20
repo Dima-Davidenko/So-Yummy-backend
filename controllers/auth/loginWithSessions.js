@@ -9,7 +9,6 @@ const { REFRESH_SECRET_KEY } = process.env;
 const removeDeadSessions = userSessions => {
   userSessions.forEach((session, index) => {
     try {
-      console.log(session);
       jwt.verify(session.refreshToken, REFRESH_SECRET_KEY);
     } catch (error) {
       console.log('error', error);
@@ -61,7 +60,11 @@ const loginWithSessions = async (req, res) => {
   const userDeviceInfo = JSON.stringify(UAParser(req.headers['user-agent']));
   // find current session
   const sessionIndex = findCurrentSessionIndex({ userSessions, userDeviceInfo });
-
+  console.log('========User Device Info =============');
+  console.log(userDeviceInfo);
+  console.log(req.ip);
+  console.log(req.ips);
+  console.log('======================================');
   if (sessionIndex !== -1) {
     // Session for current user is already present, return existed tokens
     res.json({

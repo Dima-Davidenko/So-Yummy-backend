@@ -15,6 +15,7 @@ const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
+app.set('trust proxy', true);
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());

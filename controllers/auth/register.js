@@ -8,7 +8,7 @@ const register = async (req, res) => {
   const { name, email, password } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2nhD9x9pqs6dqJFPFycVHC9m43tyKABXDLg&usqp=CAU';
+    'https://res.cloudinary.com/ddbvbv5sp/image/upload/v1679336722/images_s8wrdd.jpg';
   const verificationToken = nanoid();
   const lowCaseEmail = email.toLowerCase();
   const user = await User.create({
