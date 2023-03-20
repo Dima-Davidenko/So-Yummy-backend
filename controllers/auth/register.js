@@ -1,5 +1,4 @@
 const { User } = require('../../models/user');
-const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const { BASE_FRONTEND_URL } = process.env;
 const { sendEmail } = require('../../helpers');
@@ -8,14 +7,15 @@ const { nanoid } = require('nanoid');
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email);
+  const avatarURL =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2nhD9x9pqs6dqJFPFycVHC9m43tyKABXDLg&usqp=CAU';
   const verificationToken = nanoid();
   const lowCaseEmail = email.toLowerCase();
   const user = await User.create({
     name,
     email: lowCaseEmail,
     password: hashPassword,
-    avatarURL: `https:${avatarURL}`,
+    avatarURL,
     verificationToken,
   });
   const verificationEmail = {

@@ -14,7 +14,9 @@ const setUserData = async (req, res) => {
       user = await User.findByIdAndUpdate(req.user._id, { name, avatarURL }, { new: true });
       res.json({ name: user.name, email: user.email, avatarURL: user.avatarURL });
     };
+
     const buffer = await resizeImg({ body: req.file, width: 150, height: 150 });
+
     if (req.user.avatarURL) {
       try {
         await deleteImageFromCloudinary(req.user.avatarURL);
@@ -22,6 +24,7 @@ const setUserData = async (req, res) => {
         console.log(error.message);
       }
     }
+
     try {
       await uploadImageToCloudinary(buffer, saveAvatarURL, req.user._id);
     } catch (error) {

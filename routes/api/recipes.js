@@ -18,6 +18,6 @@ router.get('/title/:query', authenticateWithSessions, ctrl.searchByTitle);
 router.get('/ingredient/:query', authenticateWithSessions, ctrl.searchByIngredient);
 router.get('/ingredients', authenticateWithSessions, ctrl.getAllIngredients);
 
-// router.post('/private', authenticate, goThroughAllRecipes);
+// router.post('/private', goThroughAllRecipes);
 
 module.exports = router;
