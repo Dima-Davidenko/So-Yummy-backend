@@ -58,6 +58,10 @@ const loginWithSessions = async (req, res) => {
   }
 
   const userDeviceInfo = JSON.stringify(UAParser(req.headers['user-agent']));
+  if (!userDeviceInfo) {
+    console.log('=======================ERROR Empty User Device Info===========================');
+    throw HttpError(403);
+  }
   // find current session
   const sessionIndex = findCurrentSessionIndex({ userSessions, userDeviceInfo });
   console.log('========User Device Info =============');
