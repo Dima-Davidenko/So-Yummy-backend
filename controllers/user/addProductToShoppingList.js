@@ -70,7 +70,14 @@ const addProductToShoppingList = async (req, res) => {
     ingr.thumb = ingr.productId.thb;
     ingr.productId = ingr.productId._id;
   });
-  res.json({ shoppingList });
+  // If first product has been added to shoping list - send motivation 'first'
+  let motivation;
+  if (!user.motivations?.createShoppingList) {
+    req.user.motivations.createShoppingList = true;
+    await req.user.save();
+    motivation = 'first';
+  }
+  res.json({ shoppingList, motivation });
 };
 
 module.exports = addProductToShoppingList;

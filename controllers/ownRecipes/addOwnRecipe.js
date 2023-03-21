@@ -12,6 +12,13 @@ const addOwnRecipe = async (req, res) => {
   }
   const { title, category, about, instructions, time, favorite, ingredients, description } =
     req.body;
+  // If first recipe is being adding to recipe list - send motivation 'first'
+  let motivation;
+  if (!req.user.motivations?.addFirstOwnRecipe) {
+    req.user.motivations.addFirstOwnRecipe = true;
+    await req.user.save();
+    motivation = 'first';
+  }
   if (req.file) {
     let newRecipe;
     const createRecipeAndSavePreviewUrl = async result => {
@@ -28,6 +35,17 @@ const addOwnRecipe = async (req, res) => {
         preview,
         owner: req.user._id,
       });
+      if (newRecipe) {
+        req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
+        req.user.save();
+        res.json({
+          id: newRecipe._id,
+          message: `Recipe ${newRecipe._id} has been created`,
+          motivation,
+        });
+      } else {
+        res.json({ message: 'An error occured' });
+      }
     };
     const addFullImageToRecipe = async result => {
       const fullImg = result.secure_url;
@@ -40,6 +58,7 @@ const addOwnRecipe = async (req, res) => {
         res.json({
           id: newRecipe._id,
           message: `Recipe ${newRecipe._id} has been created`,
+          motivation,
         });
       } else {
         res.json({ message: 'An error occured' });
@@ -48,8 +67,8 @@ const addOwnRecipe = async (req, res) => {
     try {
       const preview = await resizeImg({ body: req.file, width: 350, height: 350 });
       await uploadImageToCloudinary(preview, createRecipeAndSavePreviewUrl, req.user._id);
-      const fullImg = await resizeImg({ body: req.file, width: 750, height: 750 });
-      await uploadImageToCloudinary(fullImg, addFullImageToRecipe, req.user._id);
+      // const fullImg = await resizeImg({ body: req.file, width: 750, height: 750 });
+      // await uploadImageToCloudinary(fullImg, addFullImageToRecipe, req.user._id);
     } catch (error) {
       console.log(error.message);
     }
@@ -70,6 +89,7 @@ const addOwnRecipe = async (req, res) => {
       res.json({
         id: newRecipe._id,
         message: `Recipe ${newRecipe._id} has been created`,
+        motivation,
       });
     } else {
       res.json({ message: 'An error occured' });

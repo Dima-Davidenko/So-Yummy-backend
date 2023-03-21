@@ -49,6 +49,25 @@ const loginWithSessions = async (req, res) => {
     userSessions = [];
   }
 
+  // If motivations field isn't created - create it
+  if (user.motivations?.useApp100days === undefined) {
+    user.motivations = { useApp100days: false };
+    await user.save();
+  }
+  // If user has been registered for 100 or more days - send motivation '100'
+  let motivation;
+  if (!user.motivations?.useApp100days) {
+    if (Date.now() - user.createdAt >= 8.64e9) {
+      motivation = '100';
+      if (!user.motivations?.useApp100days) {
+        user.motivations = { useApp100days: true };
+      } else {
+        user.motivations.useApp100days = true;
+      }
+      await user.save();
+    }
+  }
+
   // Remove dead sessions
   removeDeadSessions(userSessions);
 
@@ -69,6 +88,7 @@ const loginWithSessions = async (req, res) => {
   console.log(req.ip);
   console.log(req.ips);
   console.log('======================================');
+
   if (sessionIndex !== -1) {
     // Session for current user is already present, return existed tokens
     res.json({
@@ -79,6 +99,7 @@ const loginWithSessions = async (req, res) => {
         email: user.email,
         avatarURL: user.avatarURL,
       },
+      motivation,
     });
   } else {
     // If there are no sessions for current user - create new one and return new tokens
@@ -93,6 +114,7 @@ const loginWithSessions = async (req, res) => {
         email: user.email,
         avatarURL: user.avatarURL,
       },
+      motivation,
     });
   }
 };
