@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const getRegexForSearchByTitleAndIngredient = query => {
   const querySchema = Joi.string()
-    .pattern(/^[a-zA-Z ]+$/)
+    .pattern(/^[a-z A-Z]+$/)
     .required()
     .messages({
       'string.base': `"search query" should be a type of 'string'`,
@@ -14,7 +14,7 @@ const getRegexForSearchByTitleAndIngredient = query => {
   if (error) {
     throw HttpError(400, error.message);
   }
-  const regex = new RegExp(query.toLowerCase(), 'i');
+  const regex = new RegExp(query.trim().toLowerCase(), 'i');
   return regex;
 };
 
