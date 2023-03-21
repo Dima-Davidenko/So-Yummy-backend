@@ -47,28 +47,9 @@ const addOwnRecipe = async (req, res) => {
         res.json({ message: 'An error occured' });
       }
     };
-    const addFullImageToRecipe = async result => {
-      const fullImg = result.secure_url;
-      newRecipe = await OwnRecipe.findByIdAndUpdate(newRecipe._id, {
-        fullImg,
-      });
-      if (newRecipe) {
-        req.user.ownRecipesNumber = req.user.ownRecipesNumber + 1;
-        req.user.save();
-        res.json({
-          id: newRecipe._id,
-          message: `Recipe ${newRecipe._id} has been created`,
-          motivation,
-        });
-      } else {
-        res.json({ message: 'An error occured' });
-      }
-    };
     try {
       const preview = await resizeImg({ body: req.file, width: 350, height: 350 });
       await uploadImageToCloudinary(preview, createRecipeAndSavePreviewUrl, req.user._id);
-      // const fullImg = await resizeImg({ body: req.file, width: 750, height: 750 });
-      // await uploadImageToCloudinary(fullImg, addFullImageToRecipe, req.user._id);
     } catch (error) {
       console.log(error.message);
     }
