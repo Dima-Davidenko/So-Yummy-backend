@@ -29,16 +29,27 @@ const findCurrentSessionIndex = ({ userSessions, userDeviceInfo }) => {
 };
 
 const loginWithSessions = async (req, res) => {
-  const { email, password } = req.body;
-  const lowCaseEmail = email.toLowerCase();
-  const user = await User.findOne({ email: lowCaseEmail });
+  const email = req.body.email.toLowerCase();
+  const password = req.body.password;
+  const googlePassword = req.body.googlePassword;
+  const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(403, 'Email or password is wrong');
   }
-  if (!user.verify) {
-    throw HttpError(401, 'Email is not verified');
+
+  let comparePassword;
+
+  if (password) {
+    if (user.onlyGoogle) {
+      throw HttpError(409, 'Register to confirm your Google User account');
+    }
+    if (!user.verify) {
+      throw HttpError(401, 'Email is not verified');
+    }
+    comparePassword = await bcrypt.compare(password, user.password);
+  } else {
+    comparePassword = googlePassword === user.googlePassword;
   }
-  const comparePassword = await bcrypt.compare(password, user.password);
   if (!comparePassword) {
     throw HttpError(403, 'Email or password is wrong');
   }
@@ -78,16 +89,10 @@ const loginWithSessions = async (req, res) => {
 
   const userDeviceInfo = JSON.stringify(UAParser(req.headers['user-agent']));
   if (!userDeviceInfo) {
-    console.log('=======================ERROR Empty User Device Info===========================');
     throw HttpError(403);
   }
   // find current session
   const sessionIndex = findCurrentSessionIndex({ userSessions, userDeviceInfo });
-  console.log('========User Device Info =============');
-  console.log(userDeviceInfo);
-  console.log(req.ip);
-  console.log(req.ips);
-  console.log('======================================');
 
   if (sessionIndex !== -1) {
     // Session for current user is already present, return existed tokens

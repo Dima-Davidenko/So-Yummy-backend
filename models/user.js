@@ -23,6 +23,10 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Password is required'],
     },
+    googlePassword: {
+      type: String,
+      default: '',
+    },
     email: {
       type: String,
       match: emailRegex,
@@ -31,9 +35,13 @@ const userSchema = new Schema(
     },
     avatarURL: {
       type: String,
-      default: '',
+      default: 'https://res.cloudinary.com/ddbvbv5sp/image/upload/v1679336722/images_s8wrdd.jpg',
     },
     verify: {
+      type: Boolean,
+      default: false,
+    },
+    onlyGoogle: {
       type: Boolean,
       default: false,
     },

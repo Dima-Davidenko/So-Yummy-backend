@@ -7,7 +7,11 @@ const verify = async (req, res) => {
   if (!user) {
     throw HttpError(404, 'Verification token has not been found');
   }
-  await User.findOneAndUpdate(user._id, { verify: true, verificationToken: null });
+  await User.findOneAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+    onlyGoogle: false,
+  });
 
   res.json({
     message: 'Verification is successful',

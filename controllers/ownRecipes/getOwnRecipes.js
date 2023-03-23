@@ -12,6 +12,7 @@ const getOwnRecipes = async (req, res) => {
         data: [
           { $skip: skip },
           { $limit: limit },
+          { $sort: { createdAt: 1 } },
           {
             $project: {
               createdAt: 0,

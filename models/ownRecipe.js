@@ -82,7 +82,7 @@ const addSchema = Joi.object({
           return helpers.message('Invalid ID');
         }
       }),
-      measure: Joi.string().min(2).max(200).required(),
+      measure: Joi.string().max(200).required(),
     })
   ),
 });

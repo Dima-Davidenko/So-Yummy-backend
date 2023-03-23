@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { validateBody, authenticate } = require('../../middlewares/');
+const { validateBody, authenticate, googleAuthMiddlware } = require('../../middlewares/');
 
 const { schemas } = require('../../models/user');
 
@@ -17,6 +17,9 @@ router.post(
   ctrl.resendVerificationToken
 );
 router.post('/login', validateBody(schemas.loginSchema), ctrl.loginWithSessions);
+router.get('/redirect-google-login', ctrl.redirectGoogleLogin);
+router.get('/google-callback', ctrl.googleCallback);
+router.post('/login-google', googleAuthMiddlware, ctrl.loginWithSessions);
 router.post('/logout', authenticateWithSessions, ctrl.logoutWithSessions);
 router.post('/refresh', validateBody(schemas.refreshSchema), ctrl.refreshWithSessions);
 router.get('/current', authenticateWithSessions, ctrl.getCurrent);

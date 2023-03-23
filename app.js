@@ -12,7 +12,6 @@ const ownRecipesRouter = require('./routes/api/ownRecipes');
 const swaggerDocument = YAML.load('./data/swagger.yaml');
 
 const app = express();
-
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.set('trust proxy', true);

@@ -5,10 +5,14 @@ const {
   getSortTypeByTitleOrPopularity,
   getFacetObject,
   processPagedRecipesResult,
+  HttpError,
 } = require('../../helpers');
 
 const searchByTitle = async (req, res) => {
   const { query } = req.params;
+  if (!query) {
+    throw HttpError(400);
+  }
   const regex = getRegexForSearchByTitleAndIngredient(query);
 
   const userId = req.user._id;

@@ -11,6 +11,8 @@ const resetPassword = require('./resetPassword');
 const setNewPassword = require('./setNewPassword');
 const loginWithSessions = require('./loginWithSessions');
 const refreshWithSessions = require('./refreshWithSessions');
+const redirectGoogleLogin = require('./redirectGoogleLogin');
+const googleCallback = require('./googleCallback');
 const { ctrlWrapper } = require('../../helpers');
 
 module.exports = {
@@ -27,4 +29,6 @@ module.exports = {
   setNewPassword: ctrlWrapper(setNewPassword),
   loginWithSessions: ctrlWrapper(loginWithSessions),
   refreshWithSessions: ctrlWrapper(refreshWithSessions),
+  redirectGoogleLogin: ctrlWrapper(redirectGoogleLogin),
+  googleCallback: ctrlWrapper(googleCallback),
 };

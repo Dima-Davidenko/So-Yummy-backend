@@ -1,23 +1,32 @@
 const { User } = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const { BASE_FRONTEND_URL } = process.env;
-const { sendEmail } = require('../../helpers');
+const { sendEmail, HttpError } = require('../../helpers');
 const { nanoid } = require('nanoid');
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL =
-    'https://res.cloudinary.com/ddbvbv5sp/image/upload/v1679336722/images_s8wrdd.jpg';
   const verificationToken = nanoid();
   const lowCaseEmail = email.toLowerCase();
-  const user = await User.create({
-    name,
-    email: lowCaseEmail,
-    password: hashPassword,
-    avatarURL,
-    verificationToken,
-  });
+  let user = await User.findOne({ email });
+
+  if (user) {
+    if (!user.onlyGoogle) {
+      throw HttpError(409);
+    } else {
+      user.password = hashPassword;
+      user.verificationToken = verificationToken;
+      await user.save();
+    }
+  } else {
+    user = await User.create({
+      name,
+      email: lowCaseEmail,
+      password: hashPassword,
+      verificationToken,
+    });
+  }
   const verificationEmail = {
     to: email,
     subject: 'Email verification',
