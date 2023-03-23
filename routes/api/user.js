@@ -21,7 +21,7 @@ router.post(
   validateBody(schemas.emailSchema),
   ctrl.addEmailToSubscribeList
 );
-router.post('/subscribe-list', ctrl.removeEmailFromSubscriptionList);
+router.post('/unsubscribe', ctrl.removeEmailFromSubscriptionList);
 router.post(
   '/shopping-list',
   authenticateWithSessions,
