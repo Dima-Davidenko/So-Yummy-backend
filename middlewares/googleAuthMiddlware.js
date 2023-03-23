@@ -4,6 +4,9 @@ const { HttpError } = require('../helpers');
 const jwt = require('jsonwebtoken');
 
 const googleAuthMiddlware = async (req, res, next) => {
+  if (req.body?.email || req.body?.password) {
+    next(HttpError(400));
+  }
   try {
     const { googleAuthToken } = req.body;
     const { email, name, googlePassword } = jwt.verify(googleAuthToken, ACCESS_SECRET_KEY);

@@ -84,13 +84,55 @@ paths:
               example:
                 message: Email or password is wrong
         '409':
+          description: Conflict - Register to confirm your Google User account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Register to confirm your Google User account
+        '429':
           description: Conflict - Only one active session is permitted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/InfoMessage'
               example:
-                message: Only one active session is permitted
+                message: Too many active sessions
+  /users/login-google:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/googleAuthBody'
+        required: true
+      responses:
+        '200':
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginInfo'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Bad request
+        '429':
+          description: Conflict - Only one active session is permitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Too many active sessions
   /users/reset/send-reset-link:
     post:
       tags:
@@ -1320,6 +1362,13 @@ components:
           $ref: '#/components/schemas/Email'
         password:
           $ref: '#/components/schemas/Password'
+    googleAuthBody:
+      required:
+        - googleAuthToken
+      type: object
+      properties:
+        googleAuthToken:
+          $ref: '#/components/schemas/Token'
     Password:
       maxLength: 100
       minLength: 6

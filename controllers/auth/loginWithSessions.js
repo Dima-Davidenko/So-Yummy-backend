@@ -84,7 +84,7 @@ const loginWithSessions = async (req, res) => {
 
   if (userSessions.length >= 5) {
     // Implement alternative login procedure, temporaty throw an error
-    throw HttpError(403, 'Too many active sessions');
+    throw HttpError(429, 'Too many active sessions');
   }
 
   const userDeviceInfo = JSON.stringify(UAParser(req.headers['user-agent']));
