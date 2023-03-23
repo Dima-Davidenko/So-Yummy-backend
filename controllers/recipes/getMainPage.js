@@ -27,10 +27,10 @@ const getMainPage = async (req, res) => {
     },
   ]);
 
-  const breakfast = listRecipeResponse(result[0].breakfast);
-  const vegan = listRecipeResponse(result[0].vegan);
-  const miscellaneous = listRecipeResponse(result[0].miscellaneous);
-  const dessert = listRecipeResponse(result[0].dessert);
+  const breakfast = listRecipeResponse(result[0].breakfast, req.user._id);
+  const vegan = listRecipeResponse(result[0].vegan, req.user._id);
+  const miscellaneous = listRecipeResponse(result[0].miscellaneous, req.user._id);
+  const dessert = listRecipeResponse(result[0].dessert, req.user._id);
 
   res.json({ breakfast, vegan, miscellaneous, dessert });
 };

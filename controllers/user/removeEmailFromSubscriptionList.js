@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../../models/user');
 
 const removeEmailFromSubscriptionList = async (req, res) => {
-  const { emailToken } = req.params;
+  const { emailToken } = req.body;
   const { email } = jwt.verify(emailToken, ACCESS_SECRET_KEY);
   if (email) {
     const users = await User.find({ $match: { subscribeList: { $in: [email] } } });
@@ -15,9 +15,7 @@ const removeEmailFromSubscriptionList = async (req, res) => {
       await user.save();
     });
   }
-  res.send(
-    '<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Your Email has been removed from subscription list</title></head><body><h1>Your Email has been removed from subscription list</h1></body></html>'
-  );
+  res.json({ message: 'Success' });
 };
 
 module.exports = removeEmailFromSubscriptionList;
