@@ -26,7 +26,7 @@ const addEmailToSubscribeList = async (req, res) => {
   const subscribeConfirmEmail = {
     to: email,
     subject: 'Subscription Confirm Email',
-    html: `Your email has been added to our subscription list. <a target="_blank" href="${BASE_FRONTEND_URL}/main/${unsubscribeToken}">Unsubscribe</a>`,
+    html: `Your email has been added to our subscription list. <a target="_blank" href="${BASE_FRONTEND_URL}/unsubscribe/${unsubscribeToken}">Unsubscribe</a>`,
   };
   await sendEmail(subscribeConfirmEmail);
   res.json({ subscribeList: user.subscribeList });
