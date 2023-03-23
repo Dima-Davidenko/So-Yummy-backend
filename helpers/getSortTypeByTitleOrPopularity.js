@@ -1,11 +1,11 @@
 const getSortTypeByTitleOrPopularity = sSort => {
   let sort = 'popular';
-  const sortOpts = {};
+  let sortOpts = {};
   if (sSort === 'title') {
     sort = 'title';
-    sortOpts.title = 1;
+    sortOpts = { title: 1 };
   } else {
-    sortOpts.popularity = -1;
+    sortOpts = { popularity: -1, title: 1 };
   }
   return { sortOpts, sort };
 };
