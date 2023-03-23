@@ -677,6 +677,36 @@ paths:
                 message: Error's description
       security:
         - bearerAuth: []
+  /recipes/main-page:
+    get:
+      tags:
+        - Recipes
+      summary: Get random 4 recipes from 4 categories on main page.
+      responses:
+        '200':
+          description: Returns the list of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MainPageResponse'
+        '401':
+          description: Unauthorized - Invalid or empty access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Unauthorized
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoMessage'
+              example:
+                message: Error's description
+      security:
+        - bearerAuth: []
   /recipes/favorite:
     get:
       tags:
@@ -1757,6 +1787,17 @@ components:
           $ref: '#/components/schemas/Limit'
         sort:
           $ref: '#/components/schemas/SortOpts'
+    MainPageResponse:
+      type: object
+      properties:
+        breakfast:
+          $ref: '#/components/schemas/ArrayRecipes'
+        vegan:
+          $ref: '#/components/schemas/ArrayRecipes'
+        miscellaneous:
+          $ref: '#/components/schemas/ArrayRecipes'
+        dessert:
+          $ref: '#/components/schemas/ArrayRecipes'
     ArrayOwnRecipes:
       type: object
       properties:

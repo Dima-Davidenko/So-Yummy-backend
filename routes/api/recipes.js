@@ -8,6 +8,7 @@ const { authenticateWithSessions, isValidId } = require('../../middlewares');
 const router = express.Router();
 
 router.get('/', authenticateWithSessions, ctrl.getAll);
+router.get('/main-page', authenticateWithSessions, ctrl.getMainPage);
 router.get('/favorite', authenticateWithSessions, ctrl.getFavorite);
 router.patch('/favorite/:id', authenticateWithSessions, isValidId, ctrl.updateFavoriteById);
 router.patch('/like/:id', authenticateWithSessions, isValidId, ctrl.updateLikeById);

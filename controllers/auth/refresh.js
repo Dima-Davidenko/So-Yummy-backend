@@ -6,15 +6,6 @@ const { User } = require('../../models/user');
 
 const refresh = async (req, res, next) => {
   const { refreshToken: token } = req.body;
-  // --------------------------------------->
-  if (token === 'superuser') {
-    res.json({
-      accessToken: 'superuser',
-      refreshToken: 'superuser',
-    });
-    return;
-  }
-  // <---------------------------------------
   let tokens = {};
   let userId = '';
   try {
