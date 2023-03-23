@@ -10,9 +10,9 @@ const getOwnRecipes = async (req, res) => {
     {
       $facet: {
         data: [
+          { $sort: { createdAt: -1 } },
           { $skip: skip },
           { $limit: limit },
-          { $sort: { createdAt: -1 } },
           {
             $project: {
               createdAt: 0,
