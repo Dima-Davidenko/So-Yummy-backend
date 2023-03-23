@@ -1791,13 +1791,21 @@ components:
       type: object
       properties:
         breakfast:
-          $ref: '#/components/schemas/ArrayRecipes'
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseRecipe'
         vegan:
-          $ref: '#/components/schemas/ArrayRecipes'
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseRecipe'
         miscellaneous:
-          $ref: '#/components/schemas/ArrayRecipes'
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseRecipe'
         dessert:
-          $ref: '#/components/schemas/ArrayRecipes'
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseRecipe'
     ArrayOwnRecipes:
       type: object
       properties:
