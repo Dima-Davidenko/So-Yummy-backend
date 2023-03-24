@@ -1,5 +1,6 @@
 const { BASE_FRONTEND_URL } = process.env;
-const emailConfirmTemplate = verificationToken => {
+
+const passwordResetEmailTemplate = verificationToken => {
   return `<!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 
@@ -148,7 +149,7 @@ const emailConfirmTemplate = verificationToken => {
 													<table class="heading_block block-8" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 														<tr>
 															<td class="pad" style="text-align:center;width:100%;">
-																<h2 style="margin: 0; color: #1e251c; direction: ltr; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; font-size: 44px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;">Your email address was used when registering with our app. If you did this, follow the link below to confirm.</h2>
+																<h2 style="margin: 0; color: #000000; direction: ltr; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; font-size: 30px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;">Someone (maybe you) is trying to reset the password for your account on the SoYummy service. If you did this, follow the link:</h2>
 															</td>
 														</tr>
 													</table>
@@ -156,7 +157,7 @@ const emailConfirmTemplate = verificationToken => {
 													<table class="button_block block-10" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 														<tr>
 															<td class="pad">
-																<div class="alignment" align="center"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${BASE_FRONTEND_URL}/verification-token/${verificationToken}" style="height:42px;width:350px;v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#528252"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Tahoma, sans-serif; font-size:16px"><![endif]--><a href="${BASE_FRONTEND_URL}/verification-token/${verificationToken}" target="_blank" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#528252;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:400;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span dir="ltr" style="word-break: break-word; line-height: 32px;">Confirm registration on SoYummy App</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
+																<div class="alignment" align="center"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${BASE_FRONTEND_URL}/password-reset-token/${verificationToken}" style="height:42px;width:205px;v-text-anchor:middle;" arcsize="10%" stroke="false" fillcolor="#528252"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Tahoma, sans-serif; font-size:16px"><![endif]--><a href="${BASE_FRONTEND_URL}/password-reset-token/${verificationToken}" target="_blank" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#528252;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:400;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;"><span dir="ltr" style="word-break: break-word; line-height: 32px;">Reset your password</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
 															</td>
 														</tr>
 													</table>
@@ -177,9 +178,8 @@ const emailConfirmTemplate = verificationToken => {
 													<table class="paragraph_block block-13" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
 														<tr>
 															<td class="pad">
-																<div style="color:#101112;direction:ltr;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:19.2px;">
-																	<p style="margin: 0; margin-bottom: 16px;">If you haven't done it - you have a great opportunity to do it</p>
-																	<p style="margin: 0;"><span style="color: #41950d;"><strong><a href="${BASE_FRONTEND_URL}" target="_blank" style="text-decoration: underline; color: #8a3c90;" rel="noopener">by <span style="font-family: inherit; background-color: transparent;">clicking on THIS link.</span></a></strong></span></p>
+																<div style="color:#101112;direction:ltr;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;font-size:18px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:21.599999999999998px;">
+																	<p style="margin: 0;"><strong>If you have not reset your password, just ignore this email. Your account is securely protected by the SoYummy team</strong>!</p>
 																</div>
 															</td>
 														</tr>
@@ -257,4 +257,4 @@ const emailConfirmTemplate = verificationToken => {
 </html>`;
 };
 
-module.exports = emailConfirmTemplate;
+module.exports = passwordResetEmailTemplate;

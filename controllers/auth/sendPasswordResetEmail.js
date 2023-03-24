@@ -1,7 +1,8 @@
 const { User } = require('../../models/user');
 const { HttpError, sendEmail } = require('../../helpers');
 const jwt = require('jsonwebtoken');
-const { BASE_FRONTEND_URL, ACCESS_SECRET_KEY } = process.env;
+const passwordResetEmailTemplate = require('../../data/emailTemplates/passwordResetEmailTemplate');
+const { ACCESS_SECRET_KEY } = process.env;
 
 const sendPasswordResetEmail = async (req, res) => {
   // Get request data
@@ -44,7 +45,7 @@ const sendPasswordResetEmail = async (req, res) => {
   const verificationEmail = {
     to: email,
     subject: 'Password reset',
-    html: `<a target="_blank" href="${BASE_FRONTEND_URL}/password-reset-token/${user.verificationToken}">Click to reset your password</a>`,
+    html: passwordResetEmailTemplate(user.verificationToken),
   };
   await sendEmail(verificationEmail);
 

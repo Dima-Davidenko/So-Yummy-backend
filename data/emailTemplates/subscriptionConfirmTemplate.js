@@ -149,7 +149,7 @@ const subscriptionConfirmTemplate = unsubscribeToken => {
 													<table class="heading_block block-8" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 														<tr>
 															<td class="pad" style="text-align:center;width:100%;">
-																<h1 style="margin: 0; color: #1e251c; direction: ltr; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; font-size: 44px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Congratulations!!! You are subscribed! Your email address was added to our mailing list. If you do not want to receive the newsletter with the coolest recipes click the link below.</span></h1>
+																<h2 style="margin: 0; color: #1e251c; direction: ltr; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; font-size: 44px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Congratulations!!! You are subscribed! Your email address was added to our mailing list. If you do not want to receive the newsletter with the coolest recipes click the link below.</span></h2>
 															</td>
 														</tr>
 													</table>

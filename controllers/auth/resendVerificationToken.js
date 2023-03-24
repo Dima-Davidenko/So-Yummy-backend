@@ -1,7 +1,7 @@
 const { User } = require('../../models/user');
-const { BASE_FRONTEND_URL } = process.env;
 const { HttpError, sendEmail } = require('../../helpers');
 const bcrypt = require('bcryptjs');
+const emailConfirmTemplate = require('../../data/emailTemplates/emailConfirmTemplate');
 
 const resendVerificationToken = async (req, res) => {
   const { email, password } = req.body;
@@ -20,7 +20,7 @@ const resendVerificationToken = async (req, res) => {
   const verificationEmail = {
     to: email,
     subject: 'Email verification',
-    html: `<a target="_blank" href="${BASE_FRONTEND_URL}/verification-token/${user.verificationToken}">Click to verify your Email</a>`,
+    html: emailConfirmTemplate(user.verificationToken),
   };
   await sendEmail(verificationEmail);
 
