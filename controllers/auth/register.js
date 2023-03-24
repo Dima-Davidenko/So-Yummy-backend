@@ -1,8 +1,8 @@
 const { User } = require('../../models/user');
 const bcrypt = require('bcryptjs');
-const { BASE_FRONTEND_URL } = process.env;
 const { sendEmail, HttpError } = require('../../helpers');
 const { nanoid } = require('nanoid');
+const emailConfirmTemplate = require('../../data/emailTemplates/emailConfirmTemplate');
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -30,7 +30,7 @@ const register = async (req, res) => {
   const verificationEmail = {
     to: email,
     subject: 'Email verification',
-    html: `<a target="_blank" href="${BASE_FRONTEND_URL}/verification-token/${verificationToken}">Click to verify your Email</a>`,
+    html: emailConfirmTemplate(verificationToken),
   };
   await sendEmail(verificationEmail);
 

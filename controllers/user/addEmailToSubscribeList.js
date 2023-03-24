@@ -1,7 +1,8 @@
 const { MAX_SUBSCRIBELIST_LENGTH } = require('../../data/constants');
-const { ACCESS_SECRET_KEY, BASE_FRONTEND_URL } = process.env;
+const { ACCESS_SECRET_KEY } = process.env;
 const jwt = require('jsonwebtoken');
 const { HttpError, sendEmail } = require('../../helpers');
+const subscriptionConfirmTemplate = require('../../data/emailTemplates/subscriptionConfirmTemplate');
 
 const addEmailToSubscribeList = async (req, res) => {
   const { email } = req.body;
@@ -26,7 +27,7 @@ const addEmailToSubscribeList = async (req, res) => {
   const subscribeConfirmEmail = {
     to: email,
     subject: 'Subscription Confirm Email',
-    html: `Your email has been added to our subscription list. <a target="_blank" href="${BASE_FRONTEND_URL}/unsubscribe/${unsubscribeToken}">Unsubscribe</a>`,
+    html: subscriptionConfirmTemplate(unsubscribeToken),
   };
   await sendEmail(subscribeConfirmEmail);
   res.json({ subscribeList: user.subscribeList });
