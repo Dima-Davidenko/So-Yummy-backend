@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { HttpError } = require('../../helpers');
 const createTokens = require('../../helpers/createTokens');
 const jwt = require('jsonwebtoken');
-const { REFRESH_SECRET_KEY } = process.env;
+const { REFRESH_SECRET_KEY, ACCESS_SECRET_KEY } = process.env;
 
 const removeDeadSessions = userSessions => {
   userSessions.forEach((session, index) => {
@@ -83,7 +83,7 @@ const loginWithSessions = async (req, res) => {
   removeDeadSessions(userSessions);
 
   if (userSessions.length >= 5) {
-    // Implement alternative login procedure, temporaty throw an error
+    // Implement alternative login procedure, temporary throw an error
     throw HttpError(429, 'Too many active sessions');
   }
 
@@ -93,35 +93,37 @@ const loginWithSessions = async (req, res) => {
   }
   // find current session
   const sessionIndex = findCurrentSessionIndex({ userSessions, userDeviceInfo });
-
   if (sessionIndex !== -1) {
-    // Session for current user is already present, return existed tokens
-    res.json({
-      accessToken: userSessions[sessionIndex].accessToken,
-      refreshToken: userSessions[sessionIndex].refreshToken,
-      user: {
-        name: user.name,
-        email: user.email,
-        avatarURL: user.avatarURL,
-      },
-      motivation,
-    });
-  } else {
-    // If there are no sessions for current user - create new one and return new tokens
-    const tokens = createTokens(user._id);
-    userSessions.push({ ...tokens, userDeviceInfo });
-    await User.findByIdAndUpdate(user._id, { userSessions });
-
-    res.json({
-      ...tokens,
-      user: {
-        name: user.name,
-        email: user.email,
-        avatarURL: user.avatarURL,
-      },
-      motivation,
-    });
+    // Session for current user is already present, if token alive return existed tokens
+    try {
+      jwt.verify(userSessions[sessionIndex].accessToken, ACCESS_SECRET_KEY);
+      res.json({
+        accessToken: userSessions[sessionIndex].accessToken,
+        refreshToken: userSessions[sessionIndex].refreshToken,
+        user: {
+          name: user.name,
+          email: user.email,
+          avatarURL: user.avatarURL,
+        },
+        motivation,
+      });
+      return;
+    } catch (error) {}
   }
+  // If there are no sessions for current user - create new one and return new tokens
+  const tokens = createTokens(user._id);
+  userSessions.push({ ...tokens, userDeviceInfo });
+  await User.findByIdAndUpdate(user._id, { userSessions });
+
+  res.json({
+    ...tokens,
+    user: {
+      name: user.name,
+      email: user.email,
+      avatarURL: user.avatarURL,
+    },
+    motivation,
+  });
 };
 
 module.exports = loginWithSessions;

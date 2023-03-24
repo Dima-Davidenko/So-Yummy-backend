@@ -21,8 +21,10 @@ const refreshWithSessions = async (req, res, next) => {
       }
     }
     if (isValidSession) {
+      const { accessToken, refreshToken } = isValidSession;
       res.json({
-        ...isValidSession,
+        accessToken,
+        refreshToken,
       });
       return;
     }
