@@ -5,7 +5,7 @@ info:
   description: The API for the So Yummy project
   version: 1.0.0
 servers:
-  - url: https://so-yammy-backend.onrender.com/api
+  - url: https://so-yummy.onrender.com/api
 paths:
   /users/signup:
     post:
